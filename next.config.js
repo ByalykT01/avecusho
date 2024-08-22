@@ -14,6 +14,12 @@ const config = {
         port: "",
         pathname: "/f/**",
       },
+      {
+        protocol: "https",
+        hostname: "static.wikia.nocookie.net",
+        port: "",
+        pathname: "/silly-cat/images/**",
+      },
     ],
   },
 };
