@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
+
 const mockUrls = [
   // "https://utfs.io/f/86c1ee30-c8e6-4b94-922b-bd05dcf96ee3-zczyo4.jpg",
   // "https://utfs.io/f/dfddd8f0-774e-43c7-9044-d940081a6749-zd0lk7.jpg",
@@ -22,16 +24,20 @@ const mockImages = mockUrls.map((url, index) => ({
 
 export default function HomePage() {
   return (
-    <main className="">
-      <div className="flex flex-wrap gap-4">
-        {[...mockImages, ...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
-          (image) => (
-            <div key={image.id} className="w-48">
-              <Image src={image.url} width={500} height={500} alt="image" />
-            </div>
-          ),
-        )}
-      </div>
+    <main className="flex flex-wrap gap-4 p-4">
+      {[...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
+        (image) => (
+          <div key={image.id} className="flex h-48 w-48 flex-col">
+            <Image
+              src={image.url}
+              width={450}
+              height={450}
+              alt="image"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+        ),
+      )}
     </main>
   );
 }

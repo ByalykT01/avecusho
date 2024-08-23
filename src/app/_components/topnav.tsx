@@ -15,26 +15,26 @@ export function TopNav() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const navItems: NavItem[] = [
-    { label: "CV", href: "/cv" },
+    { label: "About Me", href: "/about" },
     { label: "Contact", href: "/contact" },
     { label: "Shop" },
   ];
 
   const controlHeader = useCallback(() => {
-     if (window.scrollY > lastScrollY) {
-       setShowHeader(false);
-     } else {
-       setShowHeader(true);
-     }
-     setLastScrollY(window.scrollY);
-   }, [lastScrollY]);
- 
-   useEffect(() => {
-     window.addEventListener("scroll", controlHeader);
-     return () => {
-       window.removeEventListener("scroll", controlHeader);
-     };
-   }, [controlHeader]);
+    if (window.scrollY > lastScrollY) {
+      setShowHeader(false);
+    } else {
+      setShowHeader(true);
+    }
+    setLastScrollY(window.scrollY);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", controlHeader);
+    return () => {
+      window.removeEventListener("scroll", controlHeader);
+    };
+  }, [controlHeader]);
 
   return (
     <header
@@ -45,7 +45,10 @@ export function TopNav() {
           <div className="w-50 flex justify-between">
             <Image src={logo} height={50} width={50} alt="logo" />
             {navItems.map((item) => (
-              <div key={item.label} className="my-auto px-5">
+              <div
+                key={item.label}
+                className="my-auto px-1 sm:px-3 md:px-4 lg:px-5"
+              >
                 <a
                   href={item.href ?? "/"}
                   className="duration-300 hover:font-semibold hover:underline"
