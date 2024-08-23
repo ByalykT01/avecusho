@@ -3,7 +3,9 @@
 ## TODO
 
 - [x] basic deploy
-- [ ] scaffold basic UI
+- [x] scaffold basic UI
+- [x] robust header
+- [ ] robust footer
 - [ ] set up DB (vercel postgres)
 - [ ] attach DB to UI
 - [ ] add auth (w/ Clerk)

@@ -8,11 +8,11 @@ const mockUrls = [
   // "https://utfs.io/f/f4ba926b-70e9-4a65-8d20-2fe42f04537e-zczyp1.jpg",
   // "https://utfs.io/f/d13a371e-a85c-4660-b8a5-7a1c3205c537-zczyov.jpg",
   // "https://utfs.io/f/975decaf-b748-4f13-b3bc-ca937ba284d0-zczynd.jpg",
-  "https://static.wikia.nocookie.net/silly-cat/images/3/33/Noopy.png/revision/latest?cb=20231201205915",
-  "https://static.wikia.nocookie.net/silly-cat/images/b/b8/War_of_the_Silly_and_Unsilly.jpg/revision/latest?cb=20240310230516",
-  "https://static.wikia.nocookie.net/silly-cat/images/f/f7/Apple_Cat.jpg/revision/latest?cb=20240116165838&format=original",
-  "https://static.wikia.nocookie.net/silly-cat/images/3/35/Cuh.png/revision/latest?cb=20231019143206&format=original",
-  "https://static.wikia.nocookie.net/silly-cat/images/e/e5/Dear_god_its_him.png/revision/latest?cb=20240311020147&format=original",
+  "https://utfs.io/f/7fca9e24-cb33-4310-9201-8591419154f4-icslmh.webp",
+  "https://utfs.io/f/6da20e34-3675-49b9-ab39-c4ec1fe07d74-rq6ie.webp",
+  "https://utfs.io/f/ee93d308-9c36-45c4-8ab7-aea5e66047ae-rq6ic.webp",
+  "https://utfs.io/f/6ee05138-af6b-4505-a90b-ed6761dce974-rq6ib.webp",
+  "https://utfs.io/f/c65c9f55-0f60-43d0-bae4-3bb91fe1a505-rq6id.webp",
 ];
 
 const mockImages = mockUrls.map((url, index) => ({
@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <main className="">
       <div className="flex flex-wrap gap-4">
-        {[...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
+        {[...mockImages, ...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
           (image) => (
             <div key={image.id} className="w-48">
               <Image src={image.url} width={500} height={500} alt="image" />
