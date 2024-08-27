@@ -5,11 +5,8 @@ import logo from "../../../public/avecusho.svg";
 import searchIcon from "../../../public/ui_elements/search.svg";
 import cartIcon from "../../../public/ui_elements/cart.svg";
 import { useCallback, useEffect, useState } from "react";
+import type { NavItem } from "~/lib/types";
 
-type NavItem = {
-  label: string;
-  href?: string;
-};
 export function TopNav() {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);

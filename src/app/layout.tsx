@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { TopNav } from "./_components/topnav";
+import { Footer } from "./_components/footer";
 
 export const metadata: Metadata = {
   title: "Avecusho",
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body>
         <TopNav />
         <div>{children}</div>
-        <footer>Last layout</footer>
+        <Footer />
       </body>
     </html>
   );
