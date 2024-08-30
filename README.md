@@ -5,9 +5,9 @@
 - [x] basic deploy
 - [x] scaffold basic UI
 - [x] robust header
-- [ ] robust footer
-- [ ] set up DB (vercel postgres)
-- [ ] attach DB to UI
+- [x] robust footer
+- [x] set up DB (vercel postgres)
+- [x] attach DB to UI
 - [ ] add auth (w/ Clerk)
 - [ ] add image upload
 - [ ] parallel routes (working!!!)
