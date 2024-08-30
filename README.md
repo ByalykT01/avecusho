@@ -8,7 +8,7 @@
 - [x] robust footer
 - [x] set up DB (vercel postgres)
 - [x] attach DB to UI
-- [ ] add auth (w/ Clerk)
+- [ ] add auth (w/ NextAuth)
 - [ ] add image upload
 - [ ] parallel routes (working!!!)
 - [ ] analytics (posthog)
