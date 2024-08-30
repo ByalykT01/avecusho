@@ -1,3 +1,4 @@
+/** eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "~/server/db";
@@ -27,24 +28,46 @@ export default async function HomePage() {
   const posts = await db.query.posts.findMany();
 
   return (
-    <main className="flex flex-wrap justify-center gap-4 p-4">
-      {posts.map((post) => (
+    <main className="px-5 sm:px-5 md:px-5 lg:px-10">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-8">
+        {/* {posts.map((post) => (
         <p key={post.id}>{post.name}</p>
-      ))}
-      {[...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
-        (image) => (
-          <div key={image.id} className="flex items-center justify-center">
-            <Image
+      ))} */}
+        {[...mockImages, ...mockImages, ...mockImages, ...mockImages].map(
+          (image) => (
+            <div key={image.id}>
+              <img
+                className="h-[35vw] w-full object-cover sm:h-[30vw] md:h-[25vw] lg:h-[20vw]"
+                src={image.url}
+                alt="image"
+              />
+
+              <div className="h-1/7  bg-zinc-200">
+                <div className="mx-2 flex items-center justify-between">
+                  <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
+                    {"kitty num. " + image.id.toString()}
+                  </h2>
+                  <p className="text-[14px] text-[#767676]">
+                    ${Math.floor(Math.random() * 1000000)}
+                  </p>
+                </div>
+                <div>
+                  <p className="ml-2 text-[14px] text-[#767676]">color</p>
+                </div>
+              </div>
+
+              {/* <Image
               src={image.url}
               width={250}
               height={250}
               alt="image"
               style={{ objectFit: "contain" }}
               className="max-h-full max-w-full"
-            />
-          </div>
-        ),
-      )}
+            /> */}
+            </div>
+          ),
+        )}
+      </div>
     </main>
   );
 }
