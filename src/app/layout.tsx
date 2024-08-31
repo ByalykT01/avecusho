@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { TopNav } from "./_components/topnav";
 import { Footer } from "./_components/footer";
+import { CSPostHogProvider } from "./_analytics/provider";
 
 export const metadata: Metadata = {
   title: "Avecusho",
@@ -16,16 +17,18 @@ export default function RootLayout({
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="min-h-screen flex flex-col">
-        <TopNav />
-        <main className="flex-grow">
-          {children}
-          {modal}
-        </main>
-        <Footer />
-        <div id="modal-root" />
-      </body>
-    </html>
+    <CSPostHogProvider>
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body className="flex min-h-screen flex-col">
+          <TopNav />
+          <main className="flex-grow">
+            {children}
+            {modal}
+          </main>
+          <Footer />
+          <div id="modal-root" />
+        </body>
+      </html>
+    </CSPostHogProvider>
   );
 }

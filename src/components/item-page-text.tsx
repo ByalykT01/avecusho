@@ -1,4 +1,5 @@
 import type { Item } from "~/lib/definitions";
+import { Button } from "./ui/button";
 
 export default function FullItemText(props: { item: Item }) {
   const item = props.item;
@@ -15,20 +16,12 @@ export default function FullItemText(props: { item: Item }) {
       </div>
 
       <div className="mx-auto w-[90%]">
-        <p className="mb-2 text-right">{item.price}</p>
+        <p className="mb-2 text-right">${item.price}</p>
         <div className="mb-5 flex flex-col justify-center">
-          <button
-            type="button"
-            className="mb-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600"
-          >
+          <Button variant="outline" size="lg" className="mb-3">
             Add to cart
-          </button>
-          <button
-            type="button"
-            className="w-full rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300"
-          >
-            Buy
-          </button>
+          </Button>
+          <Button size="lg">Buy</Button>
         </div>
       </div>
     </div>

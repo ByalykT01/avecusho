@@ -10,7 +10,7 @@ export default async function HomePage() {
   return (
     <main className="px-5 sm:px-5 md:px-5 lg:px-10">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-8">
-        {[...items, ...items, ...items, ...items, ...items].map((item) => (
+        {items.map((item) => (
           <div key={item.id}>
             <Link href={`/items/${item.id}`}>
               <Image
