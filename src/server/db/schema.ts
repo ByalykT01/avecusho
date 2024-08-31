@@ -8,6 +8,8 @@ import {
   serial,
   timestamp,
   varchar,
+  numeric,
+  text,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -24,6 +26,8 @@ export const items = createTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     url: varchar("url", { length: 1024 }).notNull(),
+    price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+    description: text("description").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

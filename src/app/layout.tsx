@@ -17,12 +17,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
+      <body className="min-h-screen flex flex-col">
         <TopNav />
-        {children}
-        {modal}
-        <div id="modal-root" />
+        <main className="flex-grow">
+          {children}
+          {modal}
+        </main>
         <Footer />
+        <div id="modal-root" />
       </body>
     </html>
   );

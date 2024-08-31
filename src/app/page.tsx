@@ -26,12 +26,12 @@ export default async function HomePage() {
                   <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
                     {item.name}
                   </h2>
-                  <p className="text-[14px] text-[#767676]">
-                    ${Math.floor(Math.random() * 1000000)}
-                  </p>
+                  <p className="text-[14px] text-[#767676]">${item.price}</p>
                 </div>
-                <div>
-                  <p className="ml-2 text-[14px] text-[#767676]">color</p>
+                <div className="w-[90%]">
+                  <p className="ml-2 truncate text-[14px] text-[#767676]">
+                    {item.description}
+                  </p>
                 </div>
               </div>
             </Link>

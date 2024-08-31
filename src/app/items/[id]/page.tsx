@@ -1,5 +1,4 @@
 import FullItemImageView from "~/components/full-item-page";
-import { Modal } from "./modal";
 
 export default function ItemPage({
   params: { id: itemId },
