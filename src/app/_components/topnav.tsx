@@ -2,10 +2,14 @@
 
 import Image from "next/image";
 import logo from "../../../public/avecusho.svg";
-import searchIcon from "../../../public/ui_elements/search.svg";
-import cartIcon from "../../../public/ui_elements/cart.svg";
+import { CiSearch } from "react-icons/ci";
+import { CiShoppingCart } from "react-icons/ci";
+import { CiLogin } from "react-icons/ci";
+
 import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "~/lib/types";
+import Link from "next/link";
+import { LoginButton } from "~/components/auth/login-button";
 
 export function TopNav() {
   const [showHeader, setShowHeader] = useState(true);
@@ -46,21 +50,26 @@ export function TopNav() {
                 key={item.label}
                 className="my-auto px-1 sm:px-3 md:px-4 lg:px-5"
               >
-                <a
+                <Link
                   href={item.href ?? "/"}
                   className="duration-300 hover:font-semibold hover:underline"
                 >
                   {item.label}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
           <div className="w-50 flex">
             <div className="mx-2 my-auto">
-              <Image src={searchIcon} height={25} width={25} alt="search" />
+              <CiSearch className="h-7 w-7" />
             </div>
             <div className="mx-2 my-auto">
-              <Image src={cartIcon} height={25} width={25} alt="search" />
+              <CiShoppingCart className="h-7 w-7" />
+            </div>
+            <div className="mx-2 my-auto">
+              <LoginButton>
+                <CiLogin className="h-7 w-7" />
+              </LoginButton>
             </div>
           </div>
         </div>
