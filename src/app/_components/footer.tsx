@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import telegram from "../../../public/ui_elements/telegram.svg";
-import instagram from "../../../public/ui_elements/instagram.svg";
-import email from "../../../public/ui_elements/email.svg";
+import { FaTelegramPlane } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { IoAt } from "react-icons/io5";
 
 export function Footer() {
   return (
@@ -11,31 +11,13 @@ export function Footer() {
       <nav>
         <div className="mx-auto flex max-w-screen-xl justify-center py-3">
           <Link href="https://t.me/avecushoz">
-            <Image
-              height={25}
-              width={25}
-              src={telegram}
-              alt="telegram"
-              className="mx-3 hover:cursor-pointer"
-            />
+            <FaTelegramPlane className="mx-3 h-7 w-7" />
           </Link>
           <Link href="https://www.instagram.com/avecusho/">
-            <Image
-              height={25}
-              width={25}
-              src={instagram}
-              alt="insta"
-              className="mx-3 hover:cursor-pointer"
-            />
+            <FaInstagram className="mx-3 h-7 w-7" />
           </Link>
           <Link href="mailto:hohliykaurora2008@gmail.com">
-          <Image
-            height={25}
-            width={25}
-            src={email}
-            alt="email"
-            className="mx-3 hover:cursor-pointer"
-          />
+            <IoAt className="mx-3 h-7 w-7" />
           </Link>
         </div>
       </nav>
