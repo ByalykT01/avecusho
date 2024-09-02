@@ -17,3 +17,25 @@ export async function getOneItem(id: number) {
 
   return item;
 }
+
+export async function getUserByEmail(email: string) {
+  try {
+    const user = await db.query.users.findFirst({
+      where: (model, { eq }) => eq(model.email, email),
+    });
+    return user;
+  } catch {
+    return null;
+  }
+}
+
+export async function getUserById(id: string) {
+  try {
+    const user = await db.query.users.findFirst({
+      where: (model, { eq }) => eq(model.id, id),
+    });
+    return user;
+  } catch {
+    return null;
+  }
+}

@@ -4,6 +4,8 @@ export type Item = {
   url: string;
   price: string;
   description: string;
+  userId: number | null;
   createdAt: Date;
   updatedAt: Date | null;
 };
+
