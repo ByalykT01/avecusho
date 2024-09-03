@@ -21,6 +21,7 @@ export default async function HomePage() {
                 className="h-[35vw] w-full object-cover sm:h-[30vw] md:h-[25vw] lg:h-[20vw]"
                 src={item.url}
                 alt="item"
+                priority
               />
               <div className="h-1/7 bg-zinc-200">
                 <div className="mx-2 flex items-center justify-between">
