@@ -37,12 +37,15 @@ export function LoginForm() {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      await login(values).then((data) => {
-        if (data.error !== undefined) {
+      try {
+        const data = await login(values);
+        if (data?.error !== undefined) {
           setError(data.error);
         }
-        
-      });
+      } catch (error) {
+        setError("An error occurred during the login process.");
+        console.log(error)
+      }
     });
   };
   return (

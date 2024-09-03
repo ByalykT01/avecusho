@@ -10,6 +10,7 @@ import {
   varchar,
   numeric,
   index,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -28,6 +29,8 @@ const connectionString = env.POSTGRES_URL;
 const pool = postgres(connectionString, { max: 1 });
 export const db = drizzle(pool);
 
+export const userRoleEnum = pgEnum('user_role', ['ADMIN', 'USER']);
+
 // Define the users table
 export const users = createTable("user", {
   id: text("id")
@@ -38,6 +41,7 @@ export const users = createTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   password: text("password"),
+  role: userRoleEnum('role').default('USER'),
 });
 
 // Define the accounts table
