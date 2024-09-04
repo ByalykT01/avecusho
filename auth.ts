@@ -4,6 +4,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "~/server/db";
 import { getUserById } from "~/server/queries";
 import { JWT } from "next-auth/jwt";
+import { users } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
 
 declare module "next-auth" {
   interface Session {
@@ -20,8 +22,23 @@ declare module "next-auth/jwt" {
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  pages: {
+    signIn: "auth/login",
+    error: "/auth/error",
+  },
+  events: {
+    async linkAccount({ user }) {
+      if (user.id) {
+        await db
+          .update(users)
+          .set({ emailVerified: new Date() })
+          .where(eq(users.id, user.id));
+      } else {
+        throw new Error("User ID is undefined.");
+      }
+    },
+  },
   callbacks: {
-    
     async session({ token, session }) {
       console.log({ sessionToken: token });
       if (token.sub && session.user) {

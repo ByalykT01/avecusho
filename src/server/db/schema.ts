@@ -10,6 +10,7 @@ import {
   varchar,
   numeric,
   index,
+  uuid,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
@@ -17,23 +18,17 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccount } from "next-auth/adapters";
 import { env } from "~/env";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = pgTableCreator((name) => `aurora_${name}`);
-// Initialize PostgreSQL connection and Drizzle
+export const pgTable = pgTableCreator((name) => `aurora_${name}`);
+export const pgTableNoPrefix = pgTableCreator((name) => `${name}`);
+
 const connectionString = env.POSTGRES_URL;
 const pool = postgres(connectionString, { max: 1 });
 export const db = drizzle(pool);
 
-export const userRoleEnum = pgEnum('user_role', ['ADMIN', 'USER']);
+export const userRoleEnum = pgEnum("user_role", ["ADMIN", "USER"]);
 
-// Define the users table
-export const users = createTable("user", {
-  id: text("id")
+export const users = pgTableNoPrefix("user", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
@@ -41,17 +36,16 @@ export const users = createTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   password: text("password"),
-  role: userRoleEnum('role').default('USER'),
+  role: userRoleEnum("role").default("USER"),
 });
 
-// Define the accounts table
-export const accounts = createTable(
+export const accounts = pgTableNoPrefix(
   "account",
   {
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount>().notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -63,12 +57,13 @@ export const accounts = createTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
   }),
 );
 
-// Define the items table with a nullable foreign key reference to the users table
-export const items = createTable(
+export const items = pgTable(
   "item",
   {
     id: serial("id").primaryKey(),
@@ -76,7 +71,7 @@ export const items = createTable(
     url: varchar("url", { length: 1024 }).notNull(),
     price: numeric("price", { precision: 10, scale: 2 }).notNull(),
     description: text("description").notNull(),
-    userId: varchar("userId", { length: 256 }).references(() => users.id), // Nullable foreign key
+    userId: uuid("userId").references(() => users.id),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -90,12 +85,11 @@ export const items = createTable(
   }),
 );
 
-// Define the authenticators table
-export const authenticators = createTable(
+export const authenticators = pgTable(
   "authenticator",
   {
-    credentialID: text("credentialID").notNull().unique(),
-    userId: text("userId")
+    credentialID: uuid("credentialID").notNull().unique(),
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     providerAccountId: text("providerAccountId").notNull(),

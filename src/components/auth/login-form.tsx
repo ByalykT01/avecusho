@@ -6,6 +6,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "~/schemas";
 import { login } from "~/actions/login";
+
 import {
   Form,
   FormControl,
@@ -19,8 +20,14 @@ import { Button } from "../ui/button";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email is already in use"
+      : "";
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -36,17 +43,12 @@ export function LoginForm() {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
-    startTransition(async () => {
-      try {
-        const data = await login(values);
-        if (data?.error !== undefined) {
-          setError(data.error);
-        }
-      } catch (error) {
-        setError("An error occurred during the login process.");
-        console.log(error)
-      }
-    });
+    startTransition(async () =>{
+      await login(values).then((data) => {
+        setError(data?.error)
+        // setSuccess(data?.success)
+      })
+    } );
   };
   return (
     <CardWrapper
@@ -96,7 +98,7 @@ export function LoginForm() {
             />
           </div>
           <FormSuccess message={success} />
-          <FormError message={error} />
+          <FormError message={error ?? urlError} />
           <Button disabled={isPending} type="submit" className="mt-6 w-full">
             Login
           </Button>

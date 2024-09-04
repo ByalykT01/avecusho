@@ -1,6 +1,8 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from 'bcryptjs';
+import { users } from "./db/schema";
+import { eq } from "drizzle-orm";
 
 export async function getItems() {
   const items = await db.query.items.findMany({
@@ -63,3 +65,5 @@ export async function getUserFromDb(email: string, hashedPassword: string) {
 
   return null;
 }
+
+
