@@ -9,9 +9,11 @@
 - [x] set up DB (vercel postgres)
 - [x] attach DB to UI
 - [x] create sign up page
-- [ ] create register page
-- [ ] add auth (w/ NextAuth)
-- [ ] add image upload
-- [ ] parallel routes (working!!!)
+- [x] create register page
+- [x] add auth (w/ NextAuth)
+- [x] parallel routes (working!!!)
+- [ ] create account page
+- [ ] add admin panel
+- [ ] add image upload for admin 
 - [ ] analytics (posthog)
 - [ ] ratelimiting (upstash)

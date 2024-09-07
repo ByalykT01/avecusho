@@ -12,6 +12,7 @@ import {
   index,
   uuid,
   pgEnum,
+  uniqueIndex
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -102,4 +103,21 @@ export const authenticators = pgTable(
   (authenticator) => ({
     compositePK: primaryKey(authenticator.userId, authenticator.credentialID),
   }),
+);
+
+export const verificationToken = pgTable(
+  'verificationToken',
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    email: text('email').notNull(),
+    token: text('token').notNull(),
+    expires: timestamp("expires", { withTimezone: true }).notNull(),
+  },
+  (table) => {
+    return {
+      emailTokenUniqueIdx: uniqueIndex('email_token_unique').on(table.email, table.token),
+    };
+  }
 );
