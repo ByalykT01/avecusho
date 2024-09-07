@@ -5,6 +5,7 @@ import logo from "../../../public/avecusho.svg";
 import { CiSearch } from "react-icons/ci";
 import { CiShoppingCart } from "react-icons/ci";
 import { CiLogin } from "react-icons/ci";
+import { UserButton } from "~/components/auth/user-button";
 
 import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "~/lib/types";
@@ -61,14 +62,11 @@ export function TopNav() {
           </div>
           <div className="w-50 flex">
             <div className="mx-2 my-auto">
-              <CiSearch className="h-7 w-7" />
-            </div>
-            <div className="mx-2 my-auto">
               <CiShoppingCart className="h-7 w-7" />
             </div>
             <div className="mx-2 my-auto">
               <LoginButton>
-                <CiLogin className="h-7 w-7" />
+                <UserButton />
               </LoginButton>
             </div>
           </div>

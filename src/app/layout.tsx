@@ -5,8 +5,9 @@ import { type Metadata } from "next";
 import { TopNav } from "./_components/topnav";
 import { Footer } from "./_components/footer";
 import { CSPostHogProvider } from "./_analytics/provider";
-import { SessionProvider } from "next-auth/react"; 
+import { SessionProvider } from "next-auth/react";
 import { auth } from "auth";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Avecusho",
@@ -21,11 +22,12 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-    <CSPostHogProvider>
+      {/*<CSPostHogProvider> */}
       <html lang="en" className={`${GeistSans.variable}`}>
         <body className="flex min-h-screen flex-col">
           <TopNav />
           <main className="flex flex-1">
+            <Toaster />
             {children}
             {modal}
           </main>
@@ -33,7 +35,7 @@ export default async function RootLayout({
           <div id="modal-root" />
         </body>
       </html>
-    </CSPostHogProvider>
+      {/*</CSPostHogProvider> */}
     </SessionProvider>
   );
 }
