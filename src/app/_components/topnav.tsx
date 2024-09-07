@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import logo from "../../../public/avecusho.svg";
-import { CiSearch } from "react-icons/ci";
 import { CiShoppingCart } from "react-icons/ci";
-import { CiLogin } from "react-icons/ci";
 import { UserButton } from "~/components/auth/user-button";
 
 import { useCallback, useEffect, useState } from "react";

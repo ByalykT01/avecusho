@@ -20,7 +20,7 @@ import { Button } from "../ui/button";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -39,16 +39,17 @@ export function LoginForm() {
       password: "",
     },
   });
+  const router = useRouter();
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
-    startTransition(async () =>{
+    startTransition(async () => {
       await login(values).then((data) => {
-        setError(data?.error)
-        // setSuccess(data?.success)
-      })
-    } );
+        setError(data?.error);
+        router.replace("/");
+      });
+    });
   };
   return (
     <CardWrapper

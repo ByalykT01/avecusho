@@ -22,7 +22,7 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-      {/*<CSPostHogProvider> */}
+      <CSPostHogProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body className="flex min-h-screen flex-col">
           <TopNav />
@@ -35,7 +35,7 @@ export default async function RootLayout({
           <div id="modal-root" />
         </body>
       </html>
-      {/*</CSPostHogProvider> */}
+      </CSPostHogProvider>
     </SessionProvider>
   );
 }

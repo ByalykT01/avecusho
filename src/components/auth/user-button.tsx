@@ -27,12 +27,18 @@ export function UserButton() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-      <LoginButton>
-        <DropdownMenuItem>Account</DropdownMenuItem>
-      </LoginButton>
-        <LogoutButton>
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </LogoutButton>
+        {user ? (
+          <>
+            <DropdownMenuItem>Account</DropdownMenuItem>
+            <LogoutButton>
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </LogoutButton>
+          </>
+        ) : (
+          <LoginButton>
+            <DropdownMenuItem>Login</DropdownMenuItem>
+          </LoginButton>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
