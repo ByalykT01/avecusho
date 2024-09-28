@@ -12,8 +12,9 @@
 - [x] create register page
 - [x] add auth (w/ NextAuth)
 - [x] parallel routes (working!!!)
-- [ ] create account page
-- [ ] add admin panel
+- [ ] add cart logic
+- [ ] come up with payment logic
+- [ ] add 'buy' page
 - [ ] add image upload for admin 
 - [ ] analytics (posthog)
 - [ ] ratelimiting (upstash)
