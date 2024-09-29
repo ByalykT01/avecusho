@@ -59,9 +59,9 @@ export function TopNav() {
             ))}
           </div>
           <div className="w-50 flex">
-            <div className="mx-2 my-auto">
+            <Link href={"/cart"} className="mx-2 my-auto">
               <CiShoppingCart className="h-7 w-7" />
-            </div>
+            </Link>
             <div className="mx-2 my-auto">
               <LoginButton>
                 <UserButton />

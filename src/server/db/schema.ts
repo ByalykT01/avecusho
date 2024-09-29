@@ -86,6 +86,32 @@ export const items = pgTable(
   }),
 );
 
+
+// every user has their own unique cart
+export const cart = pgTable(
+  "cart",
+  {
+    id: serial("id").primaryKey(),
+    userId: uuid("userId").references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  }
+);
+
+//cart item connects user thru cart with item thru items 
+export const cartItems = pgTable(
+  "cart_item",
+  {
+    id: serial("id").primaryKey(),
+    cartId: integer("cartId").references(() => cart.id, { onDelete: "cascade" }),
+    itemId: integer("itemId").references(() => items.id, { onDelete: "cascade" }),
+    addedAt: timestamp("added_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  }
+);
+
 export const authenticators = pgTable(
   "authenticator",
   {
