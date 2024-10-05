@@ -3,9 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import { IoAt } from "react-icons/io5";
+import { MdOutlineAttachEmail } from "react-icons/md";
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="mt-8 border-t border-gray-500 bg-zinc-100 pb-10 pt-3">
       <nav>
@@ -17,7 +17,7 @@ export function Footer() {
             <FaInstagram className="mx-3 h-7 w-7" />
           </Link>
           <Link href="mailto:hohliykaurora2008@gmail.com">
-            <IoAt className="mx-3 h-7 w-7" />
+            <MdOutlineAttachEmail className="mx-3 h-7 w-7" />
           </Link>
         </div>
       </nav>

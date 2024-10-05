@@ -9,3 +9,9 @@ export type Item = {
   updatedAt: Date | null;
 };
 
+export interface CartItem {
+  id: number;
+  cartId: number;
+  itemId: number;
+  addedAt: Date;
+}

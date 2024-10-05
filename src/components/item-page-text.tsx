@@ -1,8 +1,54 @@
+"use client";
 import type { Item } from "~/lib/definitions";
 import { Button } from "./ui/button";
+import { useCurrentUser } from "hooks/use-current-user";
+
+export const dynamic = "force-dynamic";
+
+
+interface reqBody {
+  itemId: number;
+  userId: string;
+}
+
+interface CartItemAddedResponse {
+  message: string;
+  cartId: number;
+  itemId: number;
+}
 
 export default function FullItemText(props: { item: Item }) {
+  const user = useCurrentUser();
   const item = props.item;
+
+  const reqBody: reqBody = {
+    itemId: item.id,
+    userId: user?.id ?? "",
+  };
+
+  const onClick = async () => {
+    try {
+      const response = await fetch("/api/cart/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      try {
+        const data = await response.json() as CartItemAddedResponse;
+        console.log("Item added to cart:", data);
+      } catch (error) {
+        console.error("Failed to parse response or add item to cart:", error);
+      }
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
+    }
+  };
+
   return (
     <div className="mt-4 flex w-full flex-col md:mt-0 md:w-1/2 md:items-start lg:w-1/2">
       <div className="m-5 flex flex-grow flex-col text-zinc-500">
@@ -18,8 +64,13 @@ export default function FullItemText(props: { item: Item }) {
       <div className="mx-auto w-[90%]">
         <p className="mb-2 text-right">${item.price}</p>
         <div className="mb-5 flex flex-col justify-center">
-          <Button variant="outline" size="lg" className="mb-3">
-            Add to cart
+          <Button
+            onClick={onClick}
+            variant="outline"
+            size="lg"
+            className="mb-3"
+          >
+            add to cart
           </Button>
           <Button size="lg">Buy</Button>
         </div>

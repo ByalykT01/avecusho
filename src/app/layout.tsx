@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { TopNav } from "./_components/topnav";
-import { Footer } from "./_components/footer";
+import Footer from "./_components/footer";
 import { CSPostHogProvider } from "./_analytics/provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "auth";
@@ -22,7 +22,7 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-      <CSPostHogProvider>
+      {/* <CSPostHogProvider> */}
       <html lang="en" className={`${GeistSans.variable}`}>
         <body className="flex min-h-screen flex-col">
           <TopNav />
@@ -35,7 +35,7 @@ export default async function RootLayout({
           <div id="modal-root" />
         </body>
       </html>
-      </CSPostHogProvider>
+      { /* </CSPostHogProvider> */ }
     </SessionProvider>
   );
 }
