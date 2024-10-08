@@ -14,15 +14,17 @@ import { useCurrentUser } from "hooks/use-current-user";
 import { LogoutButton } from "./logout-button";
 import { LoginButton } from "./login-button";
 
+
+
 export function UserButton() {
   const user = useCurrentUser();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="mt-2">
           <AvatarImage src={user?.image ?? ""} />
           <AvatarFallback>
-            <FaUser className="h-5 w-5" />
+            <FaUser className="h-5 w-5 mb-2" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

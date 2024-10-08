@@ -15,3 +15,11 @@ export interface CartItem {
   itemId: number;
   addedAt: Date;
 }
+
+export interface UserData {
+  name: string|undefined,
+  email: string|undefined,
+  image: string|undefined,
+  id: string|undefined,
+  role: 'USER'|'ADMIN'
+}

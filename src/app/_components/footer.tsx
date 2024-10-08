@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import { MdOutlineAttachEmail } from "react-icons/md";
+import { MdAlternateEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
@@ -17,7 +17,7 @@ export default function Footer() {
             <FaInstagram className="mx-3 h-7 w-7" />
           </Link>
           <Link href="mailto:hohliykaurora2008@gmail.com">
-            <MdOutlineAttachEmail className="mx-3 h-7 w-7" />
+            <MdAlternateEmail className="mx-3 h-7 w-7" />
           </Link>
         </div>
       </nav>

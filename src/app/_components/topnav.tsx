@@ -5,6 +5,8 @@ import logo from "../../../public/avecusho.svg";
 import { CiShoppingCart } from "react-icons/ci";
 import { UserButton } from "~/components/auth/user-button";
 
+export const dynamic = "force-dynamic";
+
 import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "~/lib/types";
 import Link from "next/link";
@@ -13,6 +15,7 @@ import { LoginButton } from "~/components/auth/login-button";
 export function TopNav() {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  
 
   const navItems: NavItem[] = [
     { label: "About Me", href: "/about" },
