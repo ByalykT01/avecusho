@@ -13,11 +13,12 @@ import { FaUser } from "react-icons/fa";
 import { useCurrentUser } from "hooks/use-current-user";
 import { LogoutButton } from "./logout-button";
 import { LoginButton } from "./login-button";
+import type { UserDataProps } from "~/lib/definitions";
 
 
 
 export function UserButton() {
-  const user = useCurrentUser();
+  const user = useCurrentUser() as UserDataProps;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

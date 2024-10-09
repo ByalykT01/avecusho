@@ -1,26 +1,25 @@
 "use client";
 
 import { useCurrentUser } from "hooks/use-current-user";
-import { signOut } from "next-auth/react";
+import { Suspense } from "react";
+import EditableUserDataCard from "~/components/settings/update-data";
+import UserData from "~/components/settings/user-data";
+import type { UserDataProps } from "~/lib/definitions";
 
 export default function SettingsPage() {
-  const user = useCurrentUser();
+  const user = useCurrentUser() as UserDataProps;
   console.log(user);
-  const onClick = async () => {
-    await signOut({ callbackUrl: "/", redirect: true });
-  };
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <div className="mb-10 flex flex-col bg-zinc-100 p-10">
-        <p>{user?.name}</p>
-        <p>{user?.email} </p>
-        <p>{user?.id} </p>
-        <p>{user?.role} </p>
-      </div>
-      <div className="bg-zinc-100 p-10">
-        <button onClick={onClick} type="submit">
-          Sign Out
-        </button>
+      <div className="flex h-full w-full flex-row px-5 sm:px-5 md:px-5 lg:px-10">
+        <div className="h-full w-1/3">
+          <Suspense fallback={<p>Loading feed...</p>}>
+            <UserData user={user} />
+          </Suspense>
+        </div>
+        <div className="flex w-2/3 flex-col">
+            <EditableUserDataCard user={user} />
+        </div>
       </div>
     </div>
   );

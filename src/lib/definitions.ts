@@ -16,10 +16,12 @@ export interface CartItem {
   addedAt: Date;
 }
 
-export interface UserData {
-  name: string|undefined,
-  email: string|undefined,
-  image: string|undefined,
-  id: string|undefined,
+
+
+export interface UserDataProps {
+  name: string,
+  email: string,
+  image: string,
+  id: string,
   role: 'USER'|'ADMIN'
 }
