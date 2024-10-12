@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";  // Import useRouter
 import Image from "next/image";
 import {
   Card,
@@ -13,9 +14,12 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import type{ UserDataProps } from "~/lib/definitions";
+import type { UserDataProps } from "~/lib/definitions";
 import { Camera, Loader2 } from "lucide-react";
 import { LogoutButton } from "../auth/logout-button";
+import { FaUser } from "react-icons/fa";
+
+export const dynamic = "force-dynamic";
 
 export default function EditableUserDataCard({
   user,
@@ -26,18 +30,38 @@ export default function EditableUserDataCard({
   const [userData, setUserData] = useState(user);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
+    setUserData({
+      ...userData,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    console.log("Updated user data:", userData);
+    try {
+      const response = await fetch("api/user/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user data");
+      }
+
+      const updatedData = (await response.json()) as UserDataProps;
+      console.log("Updated user data:", updatedData);
+      setUserData(updatedData);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,13 +73,17 @@ export default function EditableUserDataCard({
           </CardTitle>
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
-              <Image
-                src={userData.image}
-                width={100}
-                height={100}
-                alt={`${userData.name}'s profile picture`}
-                className="rounded-full border-2 border-gray-200"
-              />
+              {userData.image ? (
+                <Image
+                  src={userData.image}
+                  width={100}
+                  height={100}
+                  alt={`${userData.name}'s profile picture`}
+                  className="rounded-full border-2 border-gray-200"
+                />
+              ) : (
+                <FaUser />
+              )}
               <Button
                 type="button"
                 size="icon"
@@ -74,7 +102,7 @@ export default function EditableUserDataCard({
               id="name"
               name="name"
               value={userData.name}
-              onChange={handleInputChange}
+              onChange={(event) => handleInputChange(event)}
               required
             />
           </div>
@@ -85,36 +113,16 @@ export default function EditableUserDataCard({
               name="email"
               type="email"
               value={userData.email}
-              onChange={handleInputChange}
+              onChange={(event) => handleInputChange(event)}
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="address">Shipping Address</Label>
-            <Textarea
-              id="address"
-              name="address"
-              value={""}
-              onChange={handleInputChange}
-              rows={3}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={""}
-              onChange={handleInputChange}
-            />
-          </div>
         </CardContent>
-        <CardFooter className="flex justify-between space-x-4 ">
+        <CardFooter className="flex justify-between space-x-4">
           <Button type="submit" className="flex-1" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin " />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Updating...
               </>
             ) : (

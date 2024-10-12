@@ -1,8 +1,9 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from "bcryptjs";
-import { cart, cartItems } from "./db/schema";
+import { cart, cartItems, users } from "./db/schema";
 import { and, eq } from "drizzle-orm";
+import { UserDataProps } from "~/lib/definitions";
 
 export async function getItems() {
   const items = await db.query.items.findMany({
@@ -120,12 +121,8 @@ export async function addItemToCart(itemId: number, userId: string) {
 
   const foundCartItems = await getCartItems(userId);
   foundCartItems?.map((item) => {
-    if(item.itemId === itemId) return null
-  })
-  
-  // if (foundCartItems?.find((e) => e.itemId === itemId)) {
-  //   return null;
-  // }
+    if (item.itemId === itemId) return null;
+  });
 
   const addedItem = await db.insert(cartItems).values({
     itemId: itemId,
@@ -151,14 +148,40 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getUserById(id: string) {
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.id, id),
+  });
+  return user as UserDataProps;
+}
+
+export async function updateUser(user: UserDataProps) {
   try {
-    const user = await db.query.users.findFirst({
-      where: (model, { eq }) => eq(model.id, id),
-    });
-    return user;
-  } catch {
-    return null;
+    await db.update(users).set(user).where(eq(users.id, user.id));
+  } catch (error) {
+    throw new Error(`failed to update user: ${error}`);
   }
+
+  // const updates: Partial<typeof dbUser> = {};
+
+  // if (!dbUser) {
+  //   return;
+  // }
+  // if (dbUser.name !== user.name) {
+  //   updates.name = user.name;
+  // }
+  // if (dbUser.email !== user.email) {
+  //   updates.email = user.email;
+  // }
+
+  // if (Object.keys(updates).length > 0) {
+  //   try {
+  //     await db.update(users).set(updates).where(eq(users.id, user.id));
+  //   } catch (error) {
+  //     throw new Error(`Failed to update user: ${error}`);
+  //   }
+  // }
+
+  // return updates;
 }
 
 export async function saltAndHashPassword(password: string): Promise<string> {

@@ -21,7 +21,6 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
-import Router from "next/router";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -47,7 +46,6 @@ export function LoginForm() {
     startTransition(async () => {
       await login(values).then((data) => {
         setError(data?.error);
-        Router.reload();
       });
     });
   };
