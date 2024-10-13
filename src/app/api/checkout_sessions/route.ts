@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ clientSecret: session.client_secret }, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });
+    return NextResponse.json({ err }, { status: err.statusCode as number || 500 });
   }
 }
 
@@ -41,6 +41,6 @@ export async function GET(req: NextRequest) {
       customer_email: session.customer_details?.email,
     }, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });
+    return NextResponse.json({ err }, { status: err.statusCode as number || 500 });
   }
 }

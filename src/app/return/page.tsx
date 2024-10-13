@@ -24,7 +24,7 @@ export default function Return() {
         .then((res) => res.json())
         .then((data: CheckoutSessionData) => {
           setStatus(data.status);
-          setCustomerEmail(data.customer_email || ''); // Default to an empty string if customer_email is null
+          setCustomerEmail(data.customer_email ?? ''); // Default to an empty string if customer_email is null
         })
         .catch((error) => {
           console.error("Error fetching checkout session:", error);

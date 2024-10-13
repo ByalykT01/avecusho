@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { loadStripe, Stripe } from "@stripe/stripe-js";
+import { loadStripe, type Stripe } from "@stripe/stripe-js";
 import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
@@ -10,6 +10,10 @@ import {
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
+
+interface PaymentSecretResponse {
+  clientSecret: string;
+}
 
 export default function App() {
   const fetchClientSecret = useCallback(async (): Promise<string> => {
@@ -26,14 +30,14 @@ export default function App() {
         throw new Error(`Error: ${res.statusText}`);
       }
 
-      const data = await res.json();
+      const data = await (res.json()) as PaymentSecretResponse;
       console.log("Response data:", data); // Debugging log
 
       if (!data.clientSecret) {
         throw new Error("clientSecret not found in response");
       }
 
-      return data.clientSecret as string;
+      return data.clientSecret;
     } catch (error) {
       console.error("fetchClientSecret failed:", error); // Debugging log
       throw error;

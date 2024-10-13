@@ -25,3 +25,4 @@ export interface UserDataProps {
   id: string,
   role: 'USER'|'ADMIN'
 }
+
