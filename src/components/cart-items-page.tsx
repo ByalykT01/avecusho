@@ -26,7 +26,6 @@ export default function CartItems(props: { userId: string }) {
         }
 
         const data = (await response.json()) as CartItem[];
-
         setCartItems(data);
       } catch (error) {
         console.error(error);
@@ -61,7 +60,9 @@ export default function CartItems(props: { userId: string }) {
         console.error(e);
       }
     };
-    fetchItemData().catch(console.error);
+    if (cartItems.length > 0) {
+      fetchItemData().catch(console.error);
+    }
   }, [cartItems]);
 
   const handleRemove = async (itemId: number) => {
@@ -89,11 +90,18 @@ export default function CartItems(props: { userId: string }) {
   };
 
   return (
-    <div>
-      {itemData.map((item) => {
-        if (!item) return null;
-
-        return (
+    <>
+      {!itemData || itemData.length === 0 ? (
+        <div className="flex flex-col justify-center pt-16 text-center">
+          <h1 className="text-2xl">No items</h1>
+          <div className="flex justify-center">
+            <p className="w-fit text-xl">
+              Add some, by clicking &quot;Add to cart&quot; in our shop page
+            </p>
+          </div>
+        </div>
+      ) : (
+        itemData.map((item) => (
           <div
             key={item.id}
             className="mx-auto mb-4 flex w-full flex-row justify-between bg-zinc-100 p-5"
@@ -103,9 +111,9 @@ export default function CartItems(props: { userId: string }) {
                 <Image
                   width={0}
                   height={0}
-                  sizes="100wv"
+                  sizes="100vw"
                   className="h-32 w-32"
-                  src={item?.url ?? "public/avecusho.svg"}
+                  src={item?.url ?? "/public/avecusho.svg"} // Use correct path format
                   alt="item"
                   priority
                 />
@@ -113,7 +121,7 @@ export default function CartItems(props: { userId: string }) {
               <div className="my-auto">
                 <p>Item ID: {item?.id}</p>
                 <p>Name: {item?.name}</p>
-                <p>Price: {item?.price}</p>
+                <p>Price: {item?.price} PLN</p>
               </div>
             </div>
             <div className="flex flex-col justify-evenly">
@@ -128,8 +136,8 @@ export default function CartItems(props: { userId: string }) {
               </Button>
             </div>
           </div>
-        );
-      })}
-    </div>
+        ))
+      )}
+    </>
   );
 }

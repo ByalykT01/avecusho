@@ -3,9 +3,8 @@
 import * as z from "zod";
 import { RegisterSchema } from "~/schemas";
 import { db } from "~/server/db";
-import { users, cart } from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 import {
-  getCartByUserId,
   getUserByEmail,
   saltAndHashPassword,
 } from "~/server/queries";

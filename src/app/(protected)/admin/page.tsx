@@ -1,6 +1,5 @@
 "use client";
 
-import { useCurrentRole } from "hooks/use-current-role";
 import { toast } from "sonner";
 import { RoleGate } from "~/components/auth/role-gate";
 import { FormSuccess } from "~/components/form-success";
@@ -25,7 +24,7 @@ export default function AdminPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <RoleGate allowedRole="ADMIN">
-            <FormSuccess message="Ти адмін" />{" "}
+            <FormSuccess message="Ти адмін" />
           </RoleGate>
           <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
             <p className="text-sm font-medium">Це тільки для адміна</p>

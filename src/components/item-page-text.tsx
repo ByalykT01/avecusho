@@ -2,6 +2,8 @@
 import type { Item } from "~/lib/definitions";
 import { Button } from "./ui/button";
 import { useCurrentUser } from "hooks/use-current-user";
+import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +22,14 @@ interface CartItemAddedResponse {
 export default function FullItemText(props: { item: Item }) {
   const user = useCurrentUser();
   const item = props.item;
+  
+  const router = useRouter();
+  
+    const handleBuyClick = () => {
+      router.push(`/purchase/${item.id}`);
+      window.location.reload();
+
+    };
 
   const reqBody: reqBody = {
     itemId: item.id,
@@ -36,11 +46,13 @@ export default function FullItemText(props: { item: Item }) {
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        toast.error("BAD")
       }
 
       try {
         const data = await response.json() as CartItemAddedResponse;
         console.log("Item added to cart:", data);
+        toast.success("GOOD")
       } catch (error) {
         console.error("Failed to parse response or add item to cart:", error);
       }
@@ -72,7 +84,7 @@ export default function FullItemText(props: { item: Item }) {
           >
             add to cart
           </Button>
-          <Button size="lg">Buy</Button>
+          <Button onClick={handleBuyClick} size="lg">Buy</Button>
         </div>
       </div>
     </div>

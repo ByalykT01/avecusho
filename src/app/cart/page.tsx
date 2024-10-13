@@ -12,8 +12,7 @@ export default async function CartPage() {
   return (
     <main className="mx-auto flex w-[90%] flex-col">
       <p className="mx-auto text-3xl">Cart</p>
-    
-      <CartItems userId={userId} />
-    </main>
+        <CartItems userId={userId} />
+    </main> 
   );
 }
