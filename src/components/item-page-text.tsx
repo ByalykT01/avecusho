@@ -51,7 +51,6 @@ export default function FullItemText(props: { item: Item }) {
 
       try {
         const data = await response.json() as CartItemAddedResponse;
-        console.log("Item added to cart:", data);
         toast.success("GOOD")
       } catch (error) {
         console.error("Failed to parse response or add item to cart:", error);

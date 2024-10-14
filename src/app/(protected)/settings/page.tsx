@@ -1,9 +1,7 @@
 "use client";
 
-import { useCurrentUser } from "hooks/use-current-user";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { LogoutButton } from "~/components/auth/logout-button";
-import EditableUserDataCard from "~/components/settings/update-data";
 import { Button } from "~/components/ui/button";
 
 const UserData = lazy(() => import("~/components/settings/user-data"));

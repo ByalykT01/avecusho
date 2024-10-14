@@ -1,9 +1,9 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from "bcryptjs";
-import { cart, cartItems, users } from "./db/schema";
+import { cart, cartItems, items, users } from "./db/schema";
 import { and, eq } from "drizzle-orm";
-import { UserDataProps } from "~/lib/definitions";
+import type { NewItemProps, UserDataProps } from "~/lib/definitions";
 
 export async function getItems() {
   const items = await db.query.items.findMany({
@@ -157,31 +157,24 @@ export async function getUserById(id: string) {
 export async function updateUser(user: UserDataProps) {
   try {
     await db.update(users).set(user).where(eq(users.id, user.id));
-  } catch (error) {
-    throw new Error(`failed to update user: ${error}`);
+  } catch (e) {
+    throw new Error(e as string);
   }
+}
 
-  // const updates: Partial<typeof dbUser> = {};
-
-  // if (!dbUser) {
-  //   return;
-  // }
-  // if (dbUser.name !== user.name) {
-  //   updates.name = user.name;
-  // }
-  // if (dbUser.email !== user.email) {
-  //   updates.email = user.email;
-  // }
-
-  // if (Object.keys(updates).length > 0) {
-  //   try {
-  //     await db.update(users).set(updates).where(eq(users.id, user.id));
-  //   } catch (error) {
-  //     throw new Error(`Failed to update user: ${error}`);
-  //   }
-  // }
-
-  // return updates;
+export async function createNewItem(body: NewItemProps) {
+  try{
+    const newItemId = await db.insert(items).values({
+      name: body.name,
+      url: body.url,
+      price: body.price.toFixed(2),
+      description: body.description
+    }).returning({ insertedId: items.id });
+    
+    return newItemId
+  } catch(e){
+    throw new Error(e as string)
+  }
 }
 
 export async function saltAndHashPassword(password: string): Promise<string> {

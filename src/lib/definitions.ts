@@ -1,3 +1,5 @@
+import {type FieldError, type UseFormRegister } from "react-hook-form";
+
 export type Item = {
   id: number;
   name: string;
@@ -16,8 +18,6 @@ export interface CartItem {
   addedAt: Date;
 }
 
-
-
 export interface UserDataProps {
   name: string,
   email: string,
@@ -26,3 +26,27 @@ export interface UserDataProps {
   role: 'USER'|'ADMIN'
 }
 
+export interface UploadProps { 
+  name: string,
+  price: number,
+  description: string,
+}
+
+export interface NewItemProps extends UploadProps {
+  url: string
+}
+
+export type FormFieldProps = {
+  type: string;
+  placeholder: string;
+  name: ValidFieldNames;
+  register: UseFormRegister<UploadProps>;
+  error: FieldError | undefined;
+  valueAsNumber?: boolean;
+};
+
+
+export type ValidFieldNames =
+| "name"
+| "price"
+| "description"

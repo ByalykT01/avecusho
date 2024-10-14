@@ -18,20 +18,16 @@ interface PaymentSecretResponse {
 export default function App() {
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     try {
-      console.log("Making fetch request to /api/checkout_sessions"); // Debugging log
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
-
-      console.log("Received response:", res); // Debugging log
 
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
 
       const data = await (res.json()) as PaymentSecretResponse;
-      console.log("Response data:", data); // Debugging log
 
       if (!data.clientSecret) {
         throw new Error("clientSecret not found in response");
@@ -39,7 +35,6 @@ export default function App() {
 
       return data.clientSecret;
     } catch (error) {
-      console.error("fetchClientSecret failed:", error); // Debugging log
       throw error;
     }
   }, []);

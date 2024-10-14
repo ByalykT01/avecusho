@@ -55,7 +55,6 @@ export default function EditableUserDataCard({
       }
 
       const updatedData = (await response.json()) as UserDataProps;
-      console.log("Updated user data:", updatedData);
       setUserData(updatedData);
     } catch (error) {
       console.error("Error updating user data:", error);

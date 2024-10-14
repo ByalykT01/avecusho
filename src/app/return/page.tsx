@@ -24,7 +24,7 @@ export default function Return() {
         .then((res) => res.json())
         .then((data: CheckoutSessionData) => {
           setStatus(data.status);
-          setCustomerEmail(data.customer_email ?? ''); // Default to an empty string if customer_email is null
+          setCustomerEmail(data.customer_email ?? '');
         })
         .catch((error) => {
           console.error("Error fetching checkout session:", error);
@@ -38,11 +38,16 @@ export default function Return() {
 
   if (status === 'complete') {
     return (
-      <section id="success">
-        <p>
-          We appreciate your business! A confirmation email will be sent to {customerEmail}.
-          If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
-        </p>
+      <section id="success" className="flex flex-col items-center justify-center m-auto  bg-green-100 p-4">
+        <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
+          <h1 className="text-2xl font-semibold text-green-600 mb-4">Thank You!</h1>
+          <p className="text-lg text-gray-700 mb-6">
+            We appreciate your business! A confirmation email will be sent to <span className="font-semibold">{customerEmail}</span>.
+          </p>
+          <p className="text-gray-500">
+            If you have any questions, please email <a href="mailto:orders@example.com" className="text-blue-500 underline">orders@example.com</a>.
+          </p>
+        </div>
       </section>
     );
   }
