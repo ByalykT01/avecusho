@@ -2,15 +2,21 @@ import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+ 
+interface RequestBody {
+  default_price: string;
+}
 
 // Handle POST requests
 export async function POST(req: NextRequest) {
+  const { default_price } = (await req.json()) as RequestBody;
+  
   try {
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
       line_items: [
         {
-          price: "price_1Q9BL9Kx0KQIze9gi2rKNcg8",
+          price: default_price,
           quantity: 1,
         },
       ],
@@ -25,9 +31,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Handle GET requests
 export async function GET(req: NextRequest) {
-  const sessionId = req.nextUrl.searchParams.get('session_id'); // Assuming you want to retrieve the session ID from query params
+  const sessionId = req.nextUrl.searchParams.get('session_id');
 
   if (!sessionId) {
     return NextResponse.json({ error: "Session ID is required" }, { status: 400 });

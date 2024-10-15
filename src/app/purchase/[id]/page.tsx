@@ -15,19 +15,48 @@ interface PaymentSecretResponse {
   clientSecret: string;
 }
 
-export default function App() {
+export default function App({
+  params: { id: itemId },
+}: {
+  params: { id: string };
+}) {
+  //find the item obj
+  const fetchItem = useCallback(async () => {
+    try {
+      const res = await fetch("/api/item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId: itemId }),
+      });
+      if (!res.ok) {
+        throw new Error(`Error: ${res.statusText}`);
+      }
+      const data = await res.json();
+      
+      console.log(data)
+      if (!data.product.default_price) {
+        throw new Error("Default price is missing from the item response");
+      }
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }, [itemId]);
+
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     try {
+      const item = await fetchItem();
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ default_price: item.product.default_price as string }),
       });
 
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
 
-      const data = await (res.json()) as PaymentSecretResponse;
+      const data = (await res.json()) as PaymentSecretResponse;
 
       if (!data.clientSecret) {
         throw new Error("clientSecret not found in response");
@@ -37,7 +66,7 @@ export default function App() {
     } catch (error) {
       throw error;
     }
-  }, []);
+  }, [fetchItem]);
 
   const options = { fetchClientSecret };
 
