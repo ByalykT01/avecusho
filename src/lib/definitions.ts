@@ -74,6 +74,10 @@ export interface Product {
      */
     deactivate_on?: unknown[]
     /**
+     * The product's price code, meant for checkout creation
+     */
+    default_price?: string
+    /**
      * The product's description, meant to be displayable to the customer. Only applicable to products of `type=good`.
      */
     description?: string | null

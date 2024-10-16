@@ -6,6 +6,7 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
+import type { Stripe as StripeApi } from "stripe"; // For types of the Stripe API (Product, etc.)
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
@@ -31,10 +32,10 @@ export default function App({
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
-      const data = await res.json();
+      const data = (await res.json()) as StripeApi.Product;
 
-      console.log(data)
-      if (!data.product.default_price) {
+      console.log(data.default_price);
+      if (!data.default_price) {
         throw new Error("Default price is missing from the item response");
       }
       return data;
@@ -50,7 +51,7 @@ export default function App({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          default_price: item.product.default_price as string,
+          default_price: item.default_price as string,
         }),
       });
 

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     if (existingProduct) {
       // If the product already exists, return it
-      return NextResponse.json({ product: existingProduct }, { status: 200 });
+      return NextResponse.json(existingProduct, { status: 200 });
     }
 
     // If the product doesn't exist, create a new one
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ product: newProduct }, { status: 200 });
+    return NextResponse.json(newProduct, { status: 200 });
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Internal Server Error" },
