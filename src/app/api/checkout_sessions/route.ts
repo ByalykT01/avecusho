@@ -9,9 +9,12 @@ interface RequestBody {
 
 // Handle POST requests
 export async function POST(req: NextRequest) {
+  //Get default price as string
   const { default_price } = (await req.json()) as RequestBody;
   
   try {
+    //Create a checkout session from the default price,
+    //passed after its creation / finding in stripe products
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
       line_items: [
@@ -24,7 +27,7 @@ export async function POST(req: NextRequest) {
       return_url: `${req.headers.get("origin")}/return?session_id={CHECKOUT_SESSION_ID}`,
       automatic_tax: { enabled: true },
     });
-
+    //Return client secret for further usage
     return NextResponse.json({ clientSecret: session.client_secret }, { status: 200 });
   } catch (err) {
     return NextResponse.json({ err }, { status: err.statusCode as number || 500 });

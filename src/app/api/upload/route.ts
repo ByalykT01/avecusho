@@ -7,8 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = UploadItemSchema.parse(await req.json());
 
-    const { name, price, description, url } = body;
-
     const newItemId = await createNewItem(body)
     
     

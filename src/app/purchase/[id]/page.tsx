@@ -32,7 +32,7 @@ export default function App({
         throw new Error(`Error: ${res.statusText}`);
       }
       const data = await res.json();
-      
+
       console.log(data)
       if (!data.product.default_price) {
         throw new Error("Default price is missing from the item response");
@@ -49,7 +49,9 @@ export default function App({
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ default_price: item.product.default_price as string }),
+        body: JSON.stringify({
+          default_price: item.product.default_price as string,
+        }),
       });
 
       if (!res.ok) {
