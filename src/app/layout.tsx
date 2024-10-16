@@ -25,20 +25,20 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       {/*<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">*/}
-      <CSPostHogProvider>
-        <html lang="en" className={`${GeistSans.variable}`}>
-          <body className="flex min-h-screen flex-col">
-            <TopNav />
-            <main className="flex flex-1">
-              <Toaster />
-              {children}
-              {modal}
-            </main>
-            <Footer />
-            <div id="modal-root" />
-          </body>
-        </html>
-      </CSPostHogProvider>
+      {/* <CSPostHogProvider> */}
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body className="flex min-h-screen flex-col">
+          <TopNav />
+          <main className="flex flex-1">
+            <Toaster />
+            {children}
+            {modal}
+          </main>
+          <Footer />
+          <div id="modal-root" />
+        </body>
+      </html>
+      {/* </CSPostHogProvider> */}
       {/*</ThemeProvider>*/}
     </SessionProvider>
   );

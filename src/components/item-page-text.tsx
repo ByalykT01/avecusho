@@ -27,7 +27,9 @@ export default function FullItemText(props: { item: Item }) {
   
     const handleBuyClick = () => {
       router.push(`/purchase/${item.id}`);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
     };
 
