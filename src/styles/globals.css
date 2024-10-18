@@ -7,6 +7,11 @@ dialog {
   max-height: 100vh;
 }
 
+@font-face {
+  font-family: "Helvetica";
+  src: url("../../public/fonts/HelveticaNeueMedium.otf");
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

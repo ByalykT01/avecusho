@@ -26,7 +26,7 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       {/*<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">*/}
       {/* <CSPostHogProvider> */}
-      <html lang="en" className={`${GeistSans.variable}`}>
+      <html lang="en" className="font-helvetica">
         <body className="flex min-h-screen flex-col">
           <TopNav />
           <main className="flex flex-1">

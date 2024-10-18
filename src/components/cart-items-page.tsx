@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BuyButton } from "./cart/buy-button";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import type { CartItem, Item } from "~/lib/definitions";
+import { useRouter } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default function CartItems(props: { userId: string }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [itemData, setItemData] = useState<Item[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -26,7 +27,7 @@ export default function CartItems(props: { userId: string }) {
         }
 
         const data = (await response.json()) as CartItem[];
-        setCartItems(data);
+        setCartItems(JSON.parse(JSON.stringify(data)))
       } catch (error) {
         console.error(error);
       }
@@ -125,7 +126,16 @@ export default function CartItems(props: { userId: string }) {
               </div>
             </div>
             <div className="flex flex-col justify-evenly">
-              <BuyButton label="buy" />
+              <Button
+                className="w-full"
+                size="sm"
+                onClick={async () => {
+                  router.push(`/purchase/${item.id}`);
+                  await handleRemove(item.id);
+                }}
+              >
+                Buy
+              </Button>
               <Button
                 variant="destructive"
                 className="w-full"

@@ -16,7 +16,8 @@ export default {
   			'auto-fit-100': 'repeat(auto-fit, minmax(175px, 1fr))'
   		},
   		fontFamily: {
-  			sans: ["var(--font-geist-sans)", ...fontFamily.sans]
+  			sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+        helvetica: ["Helvetica", "sans-serif"]
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
