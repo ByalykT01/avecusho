@@ -38,6 +38,10 @@ export default function CartItems(props: { userId: string }) {
 
   useEffect(() => {
     const fetchItemData = async () => {
+      if (cartItems.length === 0) {
+        console.log("Cart is empty, skipping item data fetch");
+        return;
+      }
       try {
         const fetchPromises = cartItems.map(async (cartItem) => {
           const response = await fetch("/api/cart/item", {
@@ -47,11 +51,11 @@ export default function CartItems(props: { userId: string }) {
               itemId: cartItem.itemId,
             }),
           });
-
+  
           if (!response.ok) {
             throw new Error(`Failed to fetch data for item ${cartItem.cartId}`);
           }
-
+  
           const data = (await response.json()) as Item[];
           return Array.isArray(data) ? data : [data];
         });
@@ -61,10 +65,10 @@ export default function CartItems(props: { userId: string }) {
         console.error(e);
       }
     };
-    if (cartItems.length > 0) {
-      fetchItemData().catch(console.error);
-    }
+  
+    fetchItemData().catch(console.error);
   }, [cartItems]);
+
 
   const handleRemove = async (itemId: number) => {
     const reqBody = {

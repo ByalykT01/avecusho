@@ -17,10 +17,6 @@ export function LoginButton({
     router.push("/auth/login");
   };
 
-  if (mode === "modal") {
-    return <span>TODO: IMPLEMENT MODAL</span>;
-  }
-
   return (
     <span onClick={onClick} className="cursor-pointer">
       {children}

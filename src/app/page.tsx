@@ -22,7 +22,35 @@ export default async function HomePage() {
                 alt="item"
                 priority
               />
-              <div className="h-1/7 bg-zinc-200">
+              <div className="h-1/7 text-black bg-description">
+                <div className="mx-2 flex items-center justify-between">
+                  <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
+                    {item.name}
+                  </h2>
+                  <p className="text-[14px]">${item.price}</p>
+                </div>
+                <div className="w-[90%]">
+                  <p className="ml-2 truncate text-[14px] ">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))}
+        {items.map((item) => (
+          <div key={item.id}>
+            <Link href={`/items/${item.id}`}>
+              <Image
+                width={0}
+                height={0}
+                sizes="100wv"
+                className="h-[35vw] w-full object-cover sm:h-[30vw] md:h-[25vw] lg:h-[20vw]"
+                src={item.url}
+                alt="item"
+                priority
+              />
+              <div className="h-1/7 bg-description">
                 <div className="mx-2 flex items-center justify-between">
                   <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
                     {item.name}

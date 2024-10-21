@@ -22,10 +22,10 @@ export function UserButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="mt-2">
+        <Avatar>
           <AvatarImage src={user?.image ?? ""} />
           <AvatarFallback>
-            <FaUser className="h-5 w-5 mb-2" />
+            {Array.from(user?.name)[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

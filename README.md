@@ -25,9 +25,9 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [ ] ratelimiting (upstash)
 
 ## Design updates
-- [ ] turn topnav scroll off for phones
-- [ ] update theme
-- [ ] change item style page
+- [x] turn topnav scroll off for phones
+- [x] update theme
+- [x] change item style page
 - [ ] change main page grid
 - [ ] change cart page
-- [ ] change topnav
+- [x] change topnav

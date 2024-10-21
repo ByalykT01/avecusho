@@ -1,14 +1,14 @@
 import "~/styles/globals.css";
 import "@uploadthing/react/styles.css";
 
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { TopNav } from "./_components/topnav";
-import Footer from "./_components/footer";
 import { CSPostHogProvider } from "./_analytics/provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "auth";
 import { Toaster } from "~/components/ui/sonner";
+import TopNav from "~/components/nav/new_topnav";
+import Footer from "~/components/nav/footer";
+
 // import { ThemeProvider } from "~/providers/ThemeProvider";
 
 export const metadata: Metadata = {

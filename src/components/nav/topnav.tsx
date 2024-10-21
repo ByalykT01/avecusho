@@ -1,21 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+
 import logo from "../../../public/avecusho.svg";
 import { CiShoppingCart } from "react-icons/ci";
+
+import { LoginButton } from "~/components/auth/login-button";
 import { UserButton } from "~/components/auth/user-button";
 
-export const dynamic = "force-dynamic";
-
-import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "~/lib/types";
-import Link from "next/link";
-import { LoginButton } from "~/components/auth/login-button";
+
+export const dynamic = "force-dynamic";
 
 export function TopNav() {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  
 
   const navItems: NavItem[] = [
     { label: "About Me", href: "/about" },
@@ -41,7 +42,7 @@ export function TopNav() {
 
   return (
     <header
-      className={`sticky top-0 mb-8 border-b border-gray-500 bg-zinc-100 transition-transform duration-200 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
+      className={`bg-topnav sticky top-0 mb-8 border-b border-gray-500 text-white transition-transform duration-200 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
     >
       <nav>
         <div className="mx-auto flex max-w-screen-xl justify-between px-4 py-3 sm:px-8 md:px-12 lg:px-32">
