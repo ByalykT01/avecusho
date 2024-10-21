@@ -23,7 +23,7 @@ export default async function HomePage() {
                 priority
               />
               {/* Opacity Background instead of Gradient */}
-              <div className="absolute inset-x-0 bottom-0 flex h-[15%] items-end justify-between bg-description bg-opacity-75 p-2 text-white">
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-description bg-opacity-75 p-2 text-white sm:h-[20%] lg:h-[15%]">
                 <h2 className="text-lg font-bold md:text-xl lg:text-2xl">
                   {item.name}
                 </h2>
