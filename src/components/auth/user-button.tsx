@@ -15,17 +15,16 @@ import { LogoutButton } from "./logout-button";
 import { LoginButton } from "./login-button";
 import type { UserDataProps } from "~/lib/definitions";
 
-
-
 export function UserButton() {
   const user = useCurrentUser() as UserDataProps;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarImage src={user?.image ?? ""} />
           <AvatarFallback>
-            {Array.from(user?.name)[0]?.toUpperCase()}
+            {user ? Array.from(user.name)[0]?.toUpperCase() : "U"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
