@@ -1,13 +1,11 @@
 "use server";
 
 import * as z from "zod";
+import { generateVerificationToken } from "~/lib/tokens";
 import { RegisterSchema } from "~/schemas";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import {
-  getUserByEmail,
-  saltAndHashPassword,
-} from "~/server/queries";
+import { getUserByEmail, saltAndHashPassword } from "~/server/queries";
 
 export async function register(values: z.infer<typeof RegisterSchema>) {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -35,9 +33,12 @@ export async function register(values: z.infer<typeof RegisterSchema>) {
     });
 
   if (!newUser ?? !newUser[0] ?? !newUser[0].id) {
-      return { error: "Error creating user!" };
-    }
+    return { error: "Error creating user!" };
+  }
 
- 
-  return { success: "Account created!" };
+  const verificationToken = await generateVerificationToken(email)
+
+  //  return { success: "Confirmation email sent!" };
+
+  return { success: "The account has been created!" };
 }

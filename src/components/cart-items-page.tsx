@@ -27,7 +27,7 @@ export default function CartItems(props: { userId: string }) {
         }
 
         const data = (await response.json()) as CartItem[];
-        setCartItems(JSON.parse(JSON.stringify(data)))
+        setCartItems(data)
       } catch (error) {
         console.error(error);
       }

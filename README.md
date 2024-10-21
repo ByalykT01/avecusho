@@ -15,9 +15,19 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [x] add auth (w/ NextAuth)
 - [x] parallel routes (working!!!)
 - [x] add cart logic
-- [ ] cart visual upgrade
-- [ ] come up with payment logic
-- [ ] add 'buy' page    
-- [ ] add image upload for admin 
+- [x] cart visual upgrade
+- [x] come up with payment logic
+- [x] add 'buy' page    
+- [x] add image upload for admin 
+- [ ] auto emails  (delayed due to unexpected problems)
+- [ ] update user page
 - [ ] analytics (posthog)
 - [ ] ratelimiting (upstash)
+
+## Design updates
+- [ ] turn topnav scroll off for phones
+- [ ] update theme
+- [ ] change item style page
+- [ ] change main page grid
+- [ ] change cart page
+- [ ] change topnav

@@ -23,6 +23,7 @@ export interface UserDataProps {
   email: string,
   image: string,
   id: string,
+  emailVerified: Date;
   role: 'USER'|'ADMIN'
 }
 
