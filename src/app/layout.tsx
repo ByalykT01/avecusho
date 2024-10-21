@@ -6,7 +6,7 @@ import { CSPostHogProvider } from "./_analytics/provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "auth";
 import { Toaster } from "~/components/ui/sonner";
-import TopNav from "~/components/nav/new_topnav";
+import TopNav from "~/components/nav/topnav";
 import Footer from "~/components/nav/footer";
 
 // import { ThemeProvider } from "~/providers/ThemeProvider";

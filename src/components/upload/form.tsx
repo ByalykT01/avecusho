@@ -27,7 +27,7 @@ function Form({ onSubmit }: FormProps) {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <div>
-        <h1 className="mb-4 text-3xl font-bold">Simple Form</h1>
+        <h1 className="mb-4 text-3xl font-bold">New Item Form</h1>
 
         <FormField
           type="text"

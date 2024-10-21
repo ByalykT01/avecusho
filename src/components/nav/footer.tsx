@@ -6,7 +6,7 @@ import { MdAlternateEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <footer className="mt-8 bg-footer pb-5 pt-3">
+    <footer className="mt-8 pb-3 pt-3">
       <nav>
         <div className="mx-auto flex max-w-screen-xl justify-center py-3">
           <Link href="https://t.me/avecushoz">

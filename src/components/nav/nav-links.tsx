@@ -10,25 +10,21 @@ export default function NavLinks() {
     <div className="ml-32 hidden flex-1 items-center justify-between md:ml-8 md:flex lg:ml-32">
       <div className="flex space-x-20 md:space-x-10 lg:space-x-20">
         <Link href={"/contact"} className="hover:font-semibold hover:underline">
-          <div className="text-center text-3xl">Contact</div>
+          <div className="text-center text-2xl">Contact</div>
         </Link>
         <Link href={"/about"} className="hover:font-semibold hover:underline">
-          <div className="text-center text-3xl">About Me</div>
+          <div className="text-center text-2xl">About Me</div>
         </Link>
         <Link href={"/"} className="hover:font-semibold hover:underline">
-          <div className="text-center text-3xl">Store</div>
+          <div className="text-center text-2xl">Store</div>
         </Link>
       </div>
 
       <div className="hidden space-x-10 md:flex">
-        <Link href={"/cart"}>
-          <div className="text-center text-3xl">
-            <CiShoppingCart />
-          </div>
+        <Link href={"/cart"} className="my-auto text-3xl">
+          <CiShoppingCart />
         </Link>
-        <LoginButton>
-          <UserButton />
-        </LoginButton>
+        <UserButton />
       </div>
     </div>
   );
