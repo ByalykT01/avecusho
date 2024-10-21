@@ -10,7 +10,7 @@ dialog {
 @font-face {
   font-family: "Helvetica";
   src: url("../../public/fonts/HelveticaNeueMedium.otf");
-  
+
   font-family: "Helvetica Thin";
   src: url("../../public/fonts/HelveticaNeueThin.otf");
 }
@@ -92,7 +92,7 @@ dialog {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#ecf3f3] text-foreground;
   }
 }
 

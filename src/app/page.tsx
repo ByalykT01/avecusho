@@ -22,7 +22,7 @@ export default async function HomePage() {
                 alt="item"
                 priority
               />
-              <div className="h-1/7 text-black bg-description">
+              <div className="h-1/7 bg-description text-black">
                 <div className="mx-2 flex items-center justify-between">
                   <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
                     {item.name}
@@ -30,7 +30,7 @@ export default async function HomePage() {
                   <p className="text-[14px]">${item.price}</p>
                 </div>
                 <div className="w-[90%]">
-                  <p className="ml-2 truncate text-[14px] ">
+                  <p className="ml-2 truncate text-[14px]">
                     {item.description}
                   </p>
                 </div>
@@ -50,15 +50,15 @@ export default async function HomePage() {
                 alt="item"
                 priority
               />
-              <div className="h-1/7 bg-description">
+              <div className="h-1/7 bg-description text-black">
                 <div className="mx-2 flex items-center justify-between">
                   <h2 className="font-bold sm:text-lg md:text-xl lg:text-2xl">
                     {item.name}
                   </h2>
-                  <p className="text-[14px] text-[#767676]">${item.price}</p>
+                  <p className="text-[14px]">${item.price}</p>
                 </div>
                 <div className="w-[90%]">
-                  <p className="ml-2 truncate text-[14px] text-[#767676]">
+                  <p className="ml-2 truncate text-[14px]">
                     {item.description}
                   </p>
                 </div>
