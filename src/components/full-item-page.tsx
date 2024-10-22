@@ -15,7 +15,7 @@ export default async function FullItemImageView(props: { id: number }) {
             sizes="100vw"
             priority
             alt="item image"
-            className="mt-5 w-2/3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] sm:w-2/3 md:w-2/3 lg:w-2/3"
+            className="mt-5 w-3/5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] object-cover sm:w-3/5 md:w-2/3 lg:w-2/3 "
           />
         </div>
         <FullItemText item={item} />

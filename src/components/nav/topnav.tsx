@@ -37,7 +37,7 @@ const TopNav: React.FC = () => {
 
   return (
     <div
-      className={`bg-topnav mb-8 font-helvetica_thin sticky top-0 flex h-16 items-center justify-between px-4 text-white transition-transform duration-200 sm:px-16 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
+      className={`bg-topnav mb-8 font-helvetica_thin sticky top-0 flex h-16 items-center justify-between px-4 text-white transition-transform duration-200 sm:px-16 ${showHeader ? "translate-y-0" : "-translate-y-full"} z-50`}
     >
       <Logo />
       <NavLinks />
