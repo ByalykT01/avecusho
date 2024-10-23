@@ -1,14 +1,16 @@
-"use client";
-
 import { Button } from "../ui/button";
 
 interface BuyButtonProps {
-  label: string;
+  onClick: () => void;
 }
-export function BuyButton({ label }: BuyButtonProps) {
+
+export function BuyButton({ onClick }: BuyButtonProps) {
   return (
-    <Button className="w-full" size="sm" asChild>
-      <p>{label} </p>
+    <Button
+      className="bg-button_initial py-3 px-6 text-lg font-semibold hover:bg-button_onhover w-full rounded-md"
+      onClick={onClick}
+    >
+      <p>Buy</p>
     </Button>
   );
 }

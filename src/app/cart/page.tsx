@@ -1,6 +1,6 @@
-import CartItems from "~/components/cart-items-page";
 import { auth } from "auth";
 import { redirect } from "next/navigation";
+import CartItems from "~/components/cart/cart-page";
 
 export default async function CartPage() {
   const session = await auth();
@@ -11,7 +11,9 @@ export default async function CartPage() {
 
   return (
     <main className="mx-auto flex w-[90%] flex-col">
-      <p className="mx-auto text-3xl">Cart</p>
+      <h1 className="relative mb-10 text-center text-4xl font-bold text-gray-800">
+        Cart
+      </h1>
       <CartItems userId={userId} />
     </main>
   );

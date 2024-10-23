@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React from "react";
 import { CiShoppingCart } from "react-icons/ci";
-import { LoginButton } from "../auth/login-button";
 import { UserButton } from "../auth/user-button";
 
 export default function NavLinks() {
@@ -19,7 +18,6 @@ export default function NavLinks() {
           <div className="text-center text-2xl">Store</div>
         </Link>
       </div>
-
       <div className="hidden space-x-10 md:flex">
         <Link href={"/cart"} className="my-auto text-3xl">
           <CiShoppingCart />

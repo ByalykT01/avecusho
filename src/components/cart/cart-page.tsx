@@ -1,20 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Button } from "./ui/button";
-import type { CartItem, Item } from "~/lib/definitions";
+import type { CartItemData, Item } from "~/lib/definitions";
 import { useRouter } from "next/navigation";
+import Spinner from "../spinner";
+import CartItem from "./cart-item";
 
 export const dynamic = "force-dynamic";
 
 export default function CartItems(props: { userId: string }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItemData[]>([]);
   const [itemData, setItemData] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchCartItems = async () => {
+      setLoading(true);
       try {
         const response = await fetch("/api/cart/items", {
           method: "POST",
@@ -26,10 +28,12 @@ export default function CartItems(props: { userId: string }) {
           throw new Error("Failed to fetch cart items");
         }
 
-        const data = (await response.json()) as CartItem[];
-        setCartItems(data)
+        const data = (await response.json()) as CartItemData[];
+        setCartItems(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
@@ -51,11 +55,11 @@ export default function CartItems(props: { userId: string }) {
               itemId: cartItem.itemId,
             }),
           });
-  
+
           if (!response.ok) {
             throw new Error(`Failed to fetch data for item ${cartItem.cartId}`);
           }
-  
+
           const data = (await response.json()) as Item[];
           return Array.isArray(data) ? data : [data];
         });
@@ -65,10 +69,9 @@ export default function CartItems(props: { userId: string }) {
         console.error(e);
       }
     };
-  
+
     fetchItemData().catch(console.error);
   }, [cartItems]);
-
 
   const handleRemove = async (itemId: number) => {
     const reqBody = {
@@ -94,64 +97,38 @@ export default function CartItems(props: { userId: string }) {
     }
   };
 
-  return (
-    <>
-      {!itemData || itemData.length === 0 ? (
-        <div className="flex flex-col justify-center pt-16 text-center">
-          <h1 className="text-2xl">No items</h1>
-          <div className="flex justify-center">
-            <p className="w-fit text-xl">
-              Add some, by clicking &quot;Add to cart&quot; in our shop page
-            </p>
-          </div>
+  if (loading) {
+    return (
+      <div className="mt-28 flex flex-col items-center">
+        <Spinner />
+        <p className="mt-4 text-lg text-gray-700">Loading...</p>
+      </div>
+    );
+  }
+
+  if (itemData.length === 0) {
+    return (
+      <div className="flex flex-col justify-center pt-16 text-center">
+        <h1 className="text-2xl">No items</h1>
+        <div className="flex justify-center">
+          <p className="w-fit text-xl">
+            Add some by clicking &quot;Add to cart&quot; in our shop page
+          </p>
         </div>
-      ) : (
-        itemData.map((item) => (
-          <div
-            key={item.id}
-            className="mx-auto mb-4 flex w-full flex-row justify-between bg-zinc-100 p-5"
-          >
-            <div className="flex flex-row">
-              <div className="mr-5 h-full">
-                <Image
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="h-32 w-32"
-                  src={item?.url ?? "/public/avecusho.svg"} // Use correct path format
-                  alt="item"
-                  priority
-                />
-              </div>
-              <div className="my-auto">
-                <p>Item ID: {item?.id}</p>
-                <p>Name: {item?.name}</p>
-                <p>Price: {item?.price} PLN</p>
-              </div>
-            </div>
-            <div className="flex flex-col justify-evenly">
-              <Button
-                className="w-full"
-                size="sm"
-                onClick={async () => {
-                  router.push(`/purchase/${item.id}`);
-                  await handleRemove(item.id);
-                }}
-              >
-                Buy
-              </Button>
-              <Button
-                variant="destructive"
-                className="w-full"
-                size="sm"
-                onClick={() => handleRemove(item.id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        ))
-      )}
-    </>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col space-y-4">
+      {itemData.map((item) => (
+        <CartItem
+          key={item.id}
+          item={item}
+          onRemove={handleRemove}
+          onBuy={() => router.push(`/purchase/${item.id}`)}
+        />
+      ))}
+    </div>
   );
 }

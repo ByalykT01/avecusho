@@ -9,7 +9,7 @@ export default function AboutPage() {
       <div className="flex flex-col gap-12 md:flex-row md:items-center md:space-x-8">
         <div className="flex items-center justify-center md:w-2/5">
           <Image
-            src="https://utfs.io/f/9p4lEQTK2OGEMoCn4D2gckHYyzXKIlqBnLb4Or8jJWAp2ZwE"
+            src="https://utfs.io/f/9p4lEQTK2OGEPcfXiRAs54VUcnKfbMWItD8GdHNET6Zxzh7l"
             alt="Artist Photo"
             width={600}
             height={800}
@@ -36,7 +36,7 @@ export default function AboutPage() {
           <p className="mb-6">
             I actively participate in exhibitions throughout Poland, showcasing
             both my graphic and sculptural works. Feel free to explore my
-            gallery or contact me if you`&apos;d like to learn more about my art!
+            gallery or contact me if you&apos;d like to learn more about my art!
           </p>
         </div>
       </div>

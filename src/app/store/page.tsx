@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const items = await getItems();
   return (
-    <main className="px-5 sm:px-5 md:px-5 lg:px-10">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-5 lg:gap-8">
+    <main className="mx-auto sm:mx-auto md:px-5 lg:px-10">
+      <div className="grid grid-cols-1 gap-5 sm:mx-auto sm:grid-cols-1 sm:gap-5 md:grid-cols-3 md:gap-4 lg:grid-cols-5 lg:gap-8">
         {items.map((item) => (
           <div key={item.id} className="relative overflow-hidden rounded-[5%]">
             <Link href={`/items/${item.id}`}>
@@ -16,7 +16,7 @@ export default async function HomePage() {
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="h-[45vw] w-full object-cover sm:h-[45vw] md:h-[35vw] lg:h-[20vw]"
+                className="h-[60vw] w-[70vw] sm:w-[70vw] md:w-full lg:w-full object-cover sm:h-[60vw] md:h-[35vw] lg:h-[20vw]"
                 src={item.url}
                 alt="item"
                 priority

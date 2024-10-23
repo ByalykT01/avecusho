@@ -1,9 +1,10 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { CiMenuBurger, CiCircleRemove } from "react-icons/ci";
+import { CiMenuBurger, CiCircleRemove, CiShoppingCart } from "react-icons/ci";
 import MobileMenu from "./mobile-menu";
 import NavLinks from "./nav-links";
 import Logo from "./icon";
+import Link from "next/link";
 
 const TopNav: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,10 +42,17 @@ const TopNav: React.FC = () => {
     >
       <Logo />
       <NavLinks />
-      <div className="flex flex-1 items-center justify-between md:hidden">
+      {/* Mobile view controls */}
+      <div className="flex items-center md:hidden">
+        {/* Move Cart and Menu to the right */}
+        <Link href="/cart">
+          <div className="mr-4 py-2 hover:bg-gray-200">
+            <CiShoppingCart className="text-2xl" />
+          </div>
+        </Link>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="ml-auto text-2xl"
+          className="text-2xl"
         >
           {isMenuOpen ? <CiCircleRemove /> : <CiMenuBurger />}
         </button>

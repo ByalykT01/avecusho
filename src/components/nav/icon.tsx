@@ -4,7 +4,7 @@ import Link from "next/link";
 import icon from "public/avecusho.png"
 
 const Logo = () => (
-  <Link href={"/"}>
+  <Link href={"/store"}>
   <div className="flex items-center">
     <Image
       src={icon}

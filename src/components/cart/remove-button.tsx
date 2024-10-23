@@ -1,14 +1,17 @@
-"use client";
-
 import { Button } from "../ui/button";
 
 interface RemoveButtonProps {
-  label: string;
+  onClick: () => void;
 }
-export function RemoveButton({ label }: RemoveButtonProps) {
+
+export function RemoveButton({ onClick }: RemoveButtonProps) {
   return (
-    <Button variant="destructive" className="w-full" size="sm" asChild>
-      <p>{label} </p>
+    <Button
+      className="w-full rounded-md px-4 py-2 text-lg font-medium text-black hover:bg-gray-200"
+      variant="secondary"
+      onClick={onClick}
+    >
+      <p>Remove</p>
     </Button>
   );
 }

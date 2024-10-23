@@ -28,7 +28,15 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [x] turn topnav scroll off for phones
 - [x] update theme
 - [x] change item style page
-- [ ] add "about me" and "contact"
+- [x] add "about me" and "contact"
 - [x] change main page grid
-- [ ] change cart page
+- [x] change cart page
 - [x] change topnav
+- [x] fix overflow on items modal page for phones
+- [x] make "store" text bold for phones topnav menu 
+- [x] move "cart" from topnav metu to topnav for phones 
+- [x] update border for buttons in modal page
+- [x] add zoom for images in image page
+- [x] manually change the author's photo in "about me" (cut off the top part of the photo)
+- [x] 1-column grid for phones on store page
+- [x] for pictures with no title change the title to "no title" (grey text)

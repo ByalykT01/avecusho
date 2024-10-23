@@ -11,7 +11,7 @@ export type Item = {
   updatedAt: Date | null;
 };
 
-export interface CartItem {
+export interface CartItemData {
   id: number;
   cartId: number;
   itemId: number;

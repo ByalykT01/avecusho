@@ -24,8 +24,9 @@ export default {
       },
       colors: {
         topnav: "#195d5e",
-        footer: "#bebebe",
         description: "#78aaa9",
+        button_initial: '#0f4f51',
+        button_onhover: '#578485',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

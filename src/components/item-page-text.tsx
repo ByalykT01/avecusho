@@ -59,7 +59,7 @@ export default function FullItemText(props: { item: Item }) {
   return (
     <div className="mt-6 flex w-full flex-col md:mt-0 md:w-1/2 md:items-start lg:w-1/2">
       <div className="m-6 flex flex-grow flex-col text-zinc-600">
-        <h1 className="my-3 text-3xl font-bold">{item.name}</h1>
+        {(item.name.toLowerCase() === "no title") ? (<h1 className="my-3 text-3xl font-bold text-gray-400">{item.name}</h1>) : (<h1 className="my-3 text-3xl font-bold">{item.name}</h1>) }
         <p className="my-2 text-lg">{item.description}</p>
 
         <p className="text-md my-4 text-gray-500">
@@ -72,19 +72,19 @@ export default function FullItemText(props: { item: Item }) {
         <p className="mb-4 text-right text-2xl font-semibold">
           zł {item.price}
         </p>
-        <div className="mb-6 flex flex-col justify-center">
+        <div className="mb-6 flex flex-col space-y-3 justify-center">
           <Button
             onClick={onClick}
-            variant="outline"
+            variant="secondary"
             size="lg"
-            className="mb-4"
+            className="w-full rounded-md px-4 py-2 text-lg font-medium text-black hover:bg-gray-200 border" 
           >
             Add to Cart
           </Button>
           <Button
             onClick={handleBuyClick}
             size="lg"
-            className="bg-[#0f4f51] text-white hover:bg-[#578485]"
+            className="bg-button_initial py-3 px-6 text-lg font-semibold hover:bg-button_onhover w-full rounded-md border"
           >
             Buy Now
           </Button>
