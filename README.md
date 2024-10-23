@@ -17,8 +17,8 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [x] add cart logic
 - [x] cart visual upgrade
 - [x] come up with payment logic
-- [x] add 'buy' page    
-- [x] add image upload for admin 
+- [x] add 'buy' page
+- [x] add image upload for admin
 - [ ] auto emails  (delayed due to unexpected problems)
 - [ ] update user page
 - [ ] analytics (posthog)
@@ -28,6 +28,7 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [x] turn topnav scroll off for phones
 - [x] update theme
 - [x] change item style page
-- [ ] change main page grid
+- [ ] add "about me" and "contact"
+- [x] change main page grid
 - [ ] change cart page
 - [x] change topnav
