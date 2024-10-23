@@ -2,14 +2,18 @@
 import { getItems } from "~/server/queries";
 import Image from "next/image";
 import Link from "next/link";
+
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function StorePage() {
   const items = await getItems();
+
+  const filteredItems = items.filter((item) => item.userId === null);
+
   return (
     <main className="mx-auto sm:mx-auto md:px-5 lg:px-10">
       <div className="grid grid-cols-1 gap-5 sm:mx-auto sm:grid-cols-1 sm:gap-5 md:grid-cols-3 md:gap-4 lg:grid-cols-5 lg:gap-8">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <div key={item.id} className="relative overflow-hidden rounded-[5%]">
             <Link href={`/items/${item.id}`}>
               <Image
@@ -18,7 +22,7 @@ export default async function HomePage() {
                 sizes="100vw"
                 className="h-[60vw] w-[70vw] sm:w-[70vw] md:w-full lg:w-full object-cover sm:h-[60vw] md:h-[35vw] lg:h-[20vw]"
                 src={item.url}
-                alt="item"
+                alt={item.name} // Use item.name for better accessibility
                 priority
               />
               {/* Responsive layout for name and price */}

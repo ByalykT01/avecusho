@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function AboutPage() {
+export default function MainPage() {
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-8">
       <h1 className="relative mb-10 text-center text-4xl font-bold text-gray-800">

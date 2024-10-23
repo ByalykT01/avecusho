@@ -12,6 +12,14 @@ export async function getItems() {
   return items;
 }
 
+export async function getBoughtItems(userId: string) {
+  const items = await db.query.items.findMany({
+    where: (model, {eq}) => eq(model.userId, userId)
+  })
+  
+  return items;
+}
+
 export async function getOneItem(id: number) {
   const item = await db.query.items.findFirst({
     where: (model, { eq }) => eq(model.id, id),
@@ -134,6 +142,14 @@ export async function addItemToCart(itemId: number, userId: string) {
   }
 
   return { message: "Item added to cart successfully!", cartId, itemId };
+}
+
+export async function updateItemOnPurchase(itemId: number, userId: string){
+  const updateddItem = await db.update(items)
+    .set({ userId: userId })
+    .where(eq(items.id, itemId));
+  
+  return updateddItem
 }
 
 export async function getUserByEmail(email: string) {

@@ -6,7 +6,8 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
-import type { Stripe as StripeApi } from "stripe"; // For types of the Stripe API (Product, etc.)
+import type { Stripe as StripeApi } from "stripe";
+import { useCurrentUser } from "hooks/use-current-user";
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
@@ -21,6 +22,9 @@ export default function App({
 }: {
   params: { id: string };
 }) {
+  
+  const idAsNumber = Number(itemId)
+  const userId = useCurrentUser()?.id
   //find the item obj
   const fetchItem = useCallback(async () => {
     try {
@@ -52,6 +56,8 @@ export default function App({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           default_price: item.default_price as string,
+          itemId: idAsNumber,
+          userId: userId
         }),
       });
 
@@ -69,7 +75,7 @@ export default function App({
     } catch (error) {
       throw error;
     }
-  }, [fetchItem]);
+  }, [fetchItem, idAsNumber, userId]);
 
   const options = { fetchClientSecret };
 

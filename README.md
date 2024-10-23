@@ -20,7 +20,7 @@ An e-commerce website dedicated to showcasing and selling the artworks of a tale
 - [x] add 'buy' page
 - [x] add image upload for admin
 - [ ] auto emails  (delayed due to unexpected problems)
-- [ ] update user page
+- [x] update user page
 - [ ] analytics (posthog)
 - [ ] ratelimiting (upstash)
 
