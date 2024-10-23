@@ -18,11 +18,12 @@ export default function AboutPage() {
         </div>
         <div className="text-lg leading-relaxed text-gray-700 md:w-1/2">
           <p className="mb-6">
-            I am an artist from Kyiv, Ukraine, currently living and creating in
-            Poland. My work spans various techniques, with watercolor paints,
-            charcoal, ink, and graphite being my most frequently used mediums.
-            In addition to graphic arts, I also work with sculpture, where I
-            strive to convey metaphysical concepts through physical form.
+            My name is Aurora Khokhliuk and I am an artist from Kyiv, Ukraine,
+            currently living and creating in Poland. My work spans various
+            techniques, with watercolor paints, charcoal, ink, and graphite
+            being my most frequently used mediums. In addition to graphic arts,
+            I also work with sculpture, where I strive to convey metaphysical
+            concepts through physical form.
           </p>
           <p className="mb-6">
             My art is deeply connected to my belief that material art holds
