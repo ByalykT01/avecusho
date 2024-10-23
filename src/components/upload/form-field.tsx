@@ -9,15 +9,14 @@ const FormField: React.FC<FormFieldProps> = ({
   register,
   error,
   valueAsNumber,
+  not_required, // Add this line
 }) => (
   <div className="form-field">
     <Label htmlFor={name}>{placeholder}</Label>
     <Input
       type={type}
       placeholder={placeholder}
-      {...register(name, { 
-        valueAsNumber: type === "number", 
-      })}
+      {...register(name, { valueAsNumber: type === "number", required: !not_required })} // Adjust required based on not_required
       id={name}
       className={error ? "input-error" : ""}
       step={type === "number" ? "0.01" : undefined} // Add step for number type

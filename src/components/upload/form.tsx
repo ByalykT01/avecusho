@@ -48,10 +48,11 @@ function Form({ onSubmit }: FormProps) {
 
         <FormField
           type="text"
-          placeholder="Item description"
+          placeholder="Item description (optional)"
           name="description"
           register={register}
           error={errors.description}
+          not_required={true} // Pass not_required prop here
         />
 
         <Button type="submit" className="mt-4 w-full">

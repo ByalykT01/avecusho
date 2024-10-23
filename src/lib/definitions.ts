@@ -44,6 +44,7 @@ export type FormFieldProps = {
   register: UseFormRegister<UploadProps>;
   error: FieldError | undefined;
   valueAsNumber?: boolean;
+  not_required?: boolean
 };
 
 
