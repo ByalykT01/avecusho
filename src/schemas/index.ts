@@ -51,7 +51,5 @@ export const FormItemSchema = z.object({
     .refine((val) => /^\d+(\.\d{1,2})?$/.test(val.toString()), {
       message: "Price can have up to two decimal places",
     }),
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+  description: z.string().optional()
 });

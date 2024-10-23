@@ -15,7 +15,9 @@ const FormField: React.FC<FormFieldProps> = ({
     <Input
       type={type}
       placeholder={placeholder}
-      {...register(name, { valueAsNumber: type === "number" })}
+      {...register(name, { 
+        valueAsNumber: type === "number", 
+      })}
       id={name}
       className={error ? "input-error" : ""}
       step={type === "number" ? "0.01" : undefined} // Add step for number type
