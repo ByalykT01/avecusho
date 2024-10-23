@@ -9,14 +9,14 @@ export default function ContactPage() {
       <h1 className="mb-10 text-center text-4xl font-bold text-gray-800">
         Contact Me
       </h1>
-      <div className="flex flex-col gap-12 pt-10 md:flex-row-reverse md:items-center md:space-x-8">
+      <div className="flex flex-col gap-12 md:flex-row-reverse md:items-center md:space-x-8">
         <div className="flex items-center justify-center md:w-2/5">
           <Image
             src="https://utfs.io/f/9p4lEQTK2OGEPsxOlQPAs54VUcnKfbMWItD8GdHNET6Zxzh7"
             alt="Artist Photo"
-            width={900}
-            height={1200}
-            className="rounded-lg object-cover shadow-lg"
+            width={600} // Adjust width for larger screens
+            height={800} // Adjust height for larger screens
+            className="w-3/4 rounded-lg object-cover shadow-lg md:w-full" // 75% width on mobile and full on larger screens
           />
         </div>
         <div className="text-lg leading-relaxed text-gray-700 md:w-1/2">

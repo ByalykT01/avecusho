@@ -12,10 +12,10 @@ export default function NavLinks() {
         <Link href={"/contact"} className="hover:font-semibold hover:underline">
           <div className="text-center text-2xl">Contact</div>
         </Link>
-        <Link href={"/about"} className="hover:font-semibold hover:underline">
+        <Link href={"/"} className="hover:font-semibold hover:underline">
           <div className="text-center text-2xl">About Me</div>
         </Link>
-        <Link href={"/"} className="hover:font-semibold hover:underline">
+        <Link href={"/store"} className="hover:font-semibold hover:underline">
           <div className="text-center text-2xl">Store</div>
         </Link>
       </div>

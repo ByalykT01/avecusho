@@ -1,43 +1,45 @@
-/** eslint-disable @next/next/no-img-element */
-import { getItems } from "~/server/queries";
 import Image from "next/image";
-import Link from "next/link";
-export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  const items = await getItems();
+export default function AboutPage() {
   return (
-    <main className="px-5 sm:px-5 md:px-5 lg:px-10">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-5 lg:gap-8">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="relative overflow-hidden rounded-[5%]"
-          >
-            <Link href={`/items/${item.id}`}>
-              {/* Image */}
-              <Image
-                width={0}
-                height={0}
-                sizes="100vw"
-                className="h-[45vw] w-full object-cover sm:h-[45vw] md:h-[35vw] lg:h-[20vw]"
-                src={item.url}
-                alt="item"
-                priority
-              />
-              {/* Responsive layout for name and price */}
-              <div className="absolute inset-x-0 bottom-0 flex flex-row justify-between bg-description bg-opacity-75 p-3 text-white sm:h-[25%] lg:h-[20%] lg:flex-col lg:items-start">
-                <h2 className="text-lg leading-tight tracking-wide md:text-xl lg:text-lg">
-                  {item.name}
-                </h2>
-                <p className="text-sm font-semibold tracking-tight md:text-base lg:text-lg">
-                  zł {item.price}
-                </p>
-              </div>
-            </Link>
-          </div>
-        ))}
+    <section className="mx-auto max-w-5xl px-4 md:px-8">
+      <h1 className="relative mb-10 text-center text-4xl font-bold text-gray-800">
+        About Me
+      </h1>
+      <div className="flex flex-col gap-12 md:flex-row md:items-center md:space-x-8">
+        <div className="flex items-center justify-center md:w-2/5">
+          <Image
+            src="https://utfs.io/f/9p4lEQTK2OGEMoCn4D2gckHYyzXKIlqBnLb4Or8jJWAp2ZwE"
+            alt="Artist Photo"
+            width={600}
+            height={800}
+            className="w-3/4 rounded-lg object-cover shadow-lg md:w-full"
+          />
+        </div>
+        <div className="text-lg leading-relaxed text-gray-700 md:w-1/2">
+          <p className="mb-6">
+            My name is Aurora Khokhliuk and I am an artist from Kyiv, Ukraine,
+            currently living and creating in Poland. My work spans various
+            techniques, with watercolor paints, charcoal, ink, and graphite
+            being my most frequently used mediums. In addition to graphic arts,
+            I also work with sculpture, where I strive to convey metaphysical
+            concepts through physical form.
+          </p>
+          <p className="mb-6">
+            My art is deeply connected to my belief that material art holds
+            significantly greater value. I believe that the true power of a
+            piece lies in its physical form, something that can be felt and
+            interacted with in real space. In my creative process, I experiment
+            with contrasts and material interactions, exploring the
+            possibilities of artistic expression through texture and form.
+          </p>
+          <p className="mb-6">
+            I actively participate in exhibitions throughout Poland, showcasing
+            both my graphic and sculptural works. Feel free to explore my
+            gallery or contact me if you`&apos;d like to learn more about my art!
+          </p>
+        </div>
       </div>
-    </main>
+    </section>
   );
 }

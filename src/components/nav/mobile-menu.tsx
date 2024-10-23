@@ -10,13 +10,13 @@ interface MobileMenuProps {
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) =>
   isOpen && (
     <div className="absolute right-0 top-16 flex w-full flex-col bg-white text-center text-black shadow-lg">
-      <Link href="/" onClick={onClose}>
+      <Link href="/store" onClick={onClose}>
         <div className="border-b py-2 hover:bg-gray-200">Store</div>
       </Link>
       <Link href="/contact" onClick={onClose}>
         <div className="border-b py-2 hover:bg-gray-200">Contact</div>
       </Link>
-      <Link href="/about" onClick={onClose}>
+      <Link href="/" onClick={onClose}>
         <div className="border-b py-2 hover:bg-gray-200">About Me</div>
       </Link>
       <Link href="/cart" onClick={onClose}>
