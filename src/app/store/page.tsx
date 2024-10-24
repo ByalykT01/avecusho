@@ -20,12 +20,11 @@ export default async function StorePage() {
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="h-[60vw] w-[70vw] sm:w-[70vw] md:w-full lg:w-full object-cover sm:h-[60vw] md:h-[35vw] lg:h-[20vw]"
+                className="h-[100vw] w-[75vw] sm:w-[75vw] md:w-full lg:w-full object-cover sm:h-[80vw] md:h-[45vw] lg:h-[25vw]"
                 src={item.url}
-                alt={item.name} // Use item.name for better accessibility
+                alt={item.name}
                 priority
               />
-              {/* Responsive layout for name and price */}
               <div className="absolute inset-x-0 bottom-0 flex flex-row justify-between bg-description bg-opacity-75 p-3 text-white sm:h-[25%] lg:h-[20%] lg:flex-col lg:items-start">
                 <h2 className="text-lg leading-tight tracking-wide md:text-xl lg:text-lg">
                   {item.name}
