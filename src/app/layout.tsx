@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       {/*<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">*/}
-      {/* <CSPostHogProvider> */}
+      <CSPostHogProvider>
       <html lang="en" className="font-helvetica">
         <body className="flex min-h-screen flex-col">
           <TopNav />
@@ -38,7 +38,7 @@ export default async function RootLayout({
           <div id="modal-root" />
         </body>
       </html>
-      {/* </CSPostHogProvider> */}
+      </CSPostHogProvider>
       {/*</ThemeProvider>*/}
     </SessionProvider>
   );

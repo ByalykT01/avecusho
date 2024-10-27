@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { CartItemData, Item } from "~/lib/definitions";
 import { useRouter } from "next/navigation";
 import Spinner from "../spinner";
@@ -8,96 +8,100 @@ import CartItem from "./cart-item";
 
 export const dynamic = "force-dynamic";
 
-export default function CartItems(props: { userId: string }) {
-  const [cartItems, setCartItems] = useState<CartItemData[]>([]);
-  const [itemData, setItemData] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function CartItems({ userId }: { userId: string }) {
+  const [cartState, setCartState] = useState<{
+    items: CartItemData[];
+    itemDetails: Item[];
+    loading: boolean;
+  }>({
+    items: [],
+    itemDetails: [],
+    loading: true,
+  });
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/cart/items", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: props.userId }),
-        });
+  const fetchCartItems = useCallback(async () => {
+    try {
+      const response = await fetch("/api/cart/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch cart items");
-        }
+      if (!response.ok) throw new Error("Failed to fetch cart items");
+      return (await response.json()) as CartItemData[];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }, [userId]);
 
-        const data = (await response.json()) as CartItemData[];
-        setCartItems(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
+  const fetchItemDetails = useCallback(async (cartItems: CartItemData[]) => {
+    if (!cartItems.length) return [];
 
-    fetchCartItems().catch(console.error);
-  }, [props.userId]);
-
-  useEffect(() => {
-    const fetchItemData = async () => {
-      if (cartItems.length === 0) {
-        console.log("Cart is empty, skipping item data fetch");
-        return;
-      }
-      try {
-        const fetchPromises = cartItems.map(async (cartItem) => {
-          const response = await fetch("/api/cart/item", {
+    try {
+      const responses = await Promise.all(
+        cartItems.map((item) =>
+          fetch("/api/cart/item", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              itemId: cartItem.itemId,
-            }),
-          });
+            body: JSON.stringify({ itemId: item.itemId }),
+          }),
+        ),
+      );
 
-          if (!response.ok) {
-            throw new Error(`Failed to fetch data for item ${cartItem.cartId}`);
-          }
+      const data = await Promise.all(
+        responses.map(async (response) => {
+          if (!response.ok) throw new Error("Failed to fetch item details");
+          const result = (await response.json()) as Item[];
+          return Array.isArray(result) ? result : [result];
+        }),
+      );
 
-          const data = (await response.json()) as Item[];
-          return Array.isArray(data) ? data : [data];
-        });
-        const allItems = await Promise.all(fetchPromises);
-        setItemData(allItems.flat());
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    fetchItemData().catch(console.error);
-  }, [cartItems]);
+      return data.flat();
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }, []);
 
   const handleRemove = async (itemId: number) => {
-    const reqBody = {
-      itemId,
-      userId: props.userId ?? "",
-    };
-
     try {
       const response = await fetch("/api/cart/delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reqBody),
+        body: JSON.stringify({ itemId, userId }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete item from cart");
-      }
+      if (!response.ok) throw new Error("Failed to delete item from cart");
 
-      setCartItems((prev) => prev.filter((item) => item.itemId !== itemId));
-      setItemData((prev) => prev.filter((item) => item.id !== itemId));
+      setCartState((prev) => ({
+        ...prev,
+        items: prev.items.filter((item) => item.itemId !== itemId),
+        itemDetails: prev.itemDetails.filter((item) => item.id !== itemId),
+      }));
     } catch (error) {
       console.error(error);
     }
   };
 
-  if (loading) {
+  useEffect(() => {
+    const initializeCart = async () => {
+      setCartState((prev) => ({ ...prev, loading: true }));
+      const cartItems = await fetchCartItems();
+      const itemDetails = await fetchItemDetails(cartItems);
+
+      setCartState({
+        items: cartItems,
+        itemDetails,
+        loading: false,
+      });
+    };
+
+    void initializeCart();
+  }, [fetchCartItems, fetchItemDetails]);
+
+  if (cartState.loading) {
     return (
       <div className="mt-28 flex flex-col items-center">
         <Spinner />
@@ -106,7 +110,7 @@ export default function CartItems(props: { userId: string }) {
     );
   }
 
-  if (itemData.length === 0) {
+  if (!cartState.itemDetails.length) {
     return (
       <div className="flex flex-col justify-center pt-16 text-center">
         <h1 className="text-2xl">No items</h1>
@@ -121,7 +125,7 @@ export default function CartItems(props: { userId: string }) {
 
   return (
     <div className="flex flex-col space-y-4">
-      {itemData.map((item) => (
+      {cartState.itemDetails.map((item) => (
         <CartItem
           key={item.id}
           item={item}
