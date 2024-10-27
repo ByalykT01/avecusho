@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     if (!foundItem) {
       return NextResponse.json(
         { message: "Item not found in db" },
-        { status: 404 },
+        { status: 404 }, 
       );
     }
     const products = await stripe.products.list();

@@ -22,9 +22,8 @@ export default function App({
 }: {
   params: { id: string };
 }) {
-  
-  const idAsNumber = Number(itemId)
-  const userId = useCurrentUser()?.id
+  const idAsNumber = Number(itemId);
+  const userId = useCurrentUser()?.id;
   //find the item obj
   const fetchItem = useCallback(async () => {
     try {
@@ -57,7 +56,7 @@ export default function App({
         body: JSON.stringify({
           default_price: item.default_price as string,
           itemId: idAsNumber,
-          userId: userId
+          userId: userId,
         }),
       });
 

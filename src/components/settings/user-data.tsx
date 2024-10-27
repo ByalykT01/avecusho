@@ -3,7 +3,12 @@
 import type { Item, UserDataProps } from "~/lib/definitions";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { FaUser, FaShoppingBag, FaCalendar, FaMoneyBillWave } from "react-icons/fa";
+import {
+  FaUser,
+  FaShoppingBag,
+  FaCalendar,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 import { useCurrentUser } from "hooks/use-current-user";
 import { useEffect, useState } from "react";
 import { LogoutButton } from "../auth/logout-button";
@@ -17,6 +22,7 @@ export default function UserData() {
   const [boughtItems, setBoughtItems] = useState<Item[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [opacity, setOpacity] = useState(0); // State for opacity
 
   useEffect(() => {
     if (!user) {
@@ -43,9 +49,14 @@ export default function UserData() {
           const data = (await res.json()) as Item[];
           setBoughtItems(data);
         } catch (error) {
-          setError(error instanceof Error ? error.message : "An unknown error occurred");
+          setError(
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+          );
         } finally {
           setLoadingItems(false);
+          setOpacity(1); // Set opacity to 1 after loading
         }
       }
     };
@@ -65,17 +76,17 @@ export default function UserData() {
   }
 
   const totalSpent = boughtItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace(/[^\d.-]/g, ''));
+    const price = parseFloat(item.price.replace(/[^\d.-]/g, ""));
     return sum + (isNaN(price) ? 0 : price);
   }, 0);
 
   const formatPrice = (price: string) => {
-    const numericPrice = parseFloat(price.replace(/[^\d.-]/g, ''));
-    return isNaN(numericPrice) ? '0.00' : numericPrice.toFixed(2);
+    const numericPrice = parseFloat(price.replace(/[^\d.-]/g, ""));
+    return isNaN(numericPrice) ? "0.00" : numericPrice.toFixed(2);
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-4">
+    <div className="mx-auto max-w-5xl px-4" style={{ opacity, transition: "opacity 0.5s ease-in-out" }}>
       <Card className="bg-gradient-to-br from-white to-gray-50">
         <CardHeader className="pb-8">
           <div className="flex flex-col items-center space-y-6 md:flex-row md:space-x-8 md:space-y-0">
@@ -126,7 +137,9 @@ export default function UserData() {
                 <FaMoneyBillWave className="mr-4 text-2xl text-green-500" />
                 <div>
                   <p className="text-sm text-gray-500">Total Spent</p>
-                  <p className="text-2xl font-bold">zł {totalSpent.toFixed(2)}</p>
+                  <p className="text-2xl font-bold">
+                    zł {totalSpent.toFixed(2)}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -146,7 +159,9 @@ export default function UserData() {
           </div>
 
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h3 className="mb-6 text-xl font-semibold text-gray-900">Purchase History</h3>
+            <h3 className="mb-6 text-xl font-semibold text-gray-900">
+              Purchase History
+            </h3>
             {loadingItems ? (
               <div className="flex h-48 items-center justify-center">
                 <Spinner />
@@ -160,9 +175,15 @@ export default function UserData() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-200">
-                      <th className="pb-4 text-left font-semibold text-gray-600">Item Name</th>
-                      <th className="pb-4 text-left font-semibold text-gray-600">Price</th>
-                      <th className="pb-4 text-left font-semibold text-gray-600">Purchase Date</th>
+                      <th className="pb-4 text-left font-semibold text-gray-600">
+                        Item Name
+                      </th>
+                      <th className="pb-4 text-left font-semibold text-gray-600">
+                        Price
+                      </th>
+                      <th className="pb-4 text-left font-semibold text-gray-600">
+                        Purchase Date
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -180,7 +201,10 @@ export default function UserData() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={3} className="py-8 text-center text-gray-500">
+                        <td
+                          colSpan={3}
+                          className="py-8 text-center text-gray-500"
+                        >
                           No purchase history available.
                         </td>
                       </tr>

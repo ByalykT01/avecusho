@@ -46,7 +46,7 @@ export default function FullItemImageView(props: { id: number }) {
   }
 
   return (
-    <div className={`flex h-full w-full transition-opacity duration-1000 ease-in-out ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`flex h-full w-full transition-opacity duration-500 ease-in-out ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <div className="m-auto flex h-[90%] w-[90%] flex-col overflow-y-auto rounded-lg bg-zinc-50 md:flex-row lg:flex-row">
         <Link href={item?.url} passHref legacyBehavior>
           <a
