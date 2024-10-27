@@ -10,7 +10,7 @@ export default function StorePage() {
   const [items, setItems] = useState<Item[]>([])
   const fetchItems = useCallback(async() => {
     try{
-      const response = await fetch("/api/allitems")
+      const response = await fetch("/api/items/allitems")
        return (await response.json()) as Item[];
     }catch(e){
       console.error(e);

@@ -1,3 +1,4 @@
+"use client"
 import FullItemImageView from "~/components/full-item-page";
 
 export default function ItemPage({
