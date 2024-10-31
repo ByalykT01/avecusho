@@ -20,7 +20,6 @@ export default function ItemCard({ item }: { item: Item }) {
               src={item.url}
               alt={item.name}
               priority={false}
-              quality={85}
               loading="lazy"
               onLoad={() => setImageLoaded(true)}
             />

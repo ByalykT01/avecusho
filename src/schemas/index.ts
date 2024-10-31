@@ -88,7 +88,7 @@ export const UserDataSchema = z.object({
 
   phoneNumber: z
     .string()
-    .refine((phone) => phone.length >= 10 && phone.length <= 15, {
+    .refine((phone) => phone.length >= 9 && phone.length <= 15, {
       message: "Phone number must be between 10 and 15 digits",
     }),
 

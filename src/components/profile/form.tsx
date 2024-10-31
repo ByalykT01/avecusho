@@ -7,6 +7,7 @@ import { UserDataSchema } from "~/schemas";
 import { UploadButton } from "~/utils/uploadthing";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "hooks/use-current-user";
+import Image from "next/image";
 
 interface FormProps {
   onSubmit: (data: AllAdditionalUserDataProps) => void;
@@ -31,12 +32,13 @@ function Form({ onSubmit, defaultValues }: FormProps) {
   useEffect(() => {
     if (defaultValues) {
       reset(defaultValues);
-      setImageUrl(defaultValues.image ?? imageUrl);
+      setImageUrl(imageUrl ?? defaultValues.image);
     }
   }, [defaultValues, reset, imageUrl]);
 
   const handleFormSubmit = async (data: AllAdditionalUserDataProps) => {
     try {
+      data.image = imageUrl
       const userId = user?.id;
       const requestData = { ...data, userId };
       const response = await fetch("/api/user/edit", {
@@ -82,10 +84,12 @@ function Form({ onSubmit, defaultValues }: FormProps) {
             <div className="flex flex-col gap-4">
               {imageUrl && (
                 <div className="h-32 w-32 overflow-hidden rounded-full">
-                  <img
+                  <Image
                     src={imageUrl}
                     alt="Profile preview"
                     className="h-full w-full object-cover"
+                    width={300}
+                    height={300}
                   />
                 </div>
               )}

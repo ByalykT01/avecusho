@@ -32,8 +32,8 @@ export default function EditPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const data = await response.json();
+      const data = (await response.json()) as AllAdditionalUserDataProps;
+      console.log("FOUND DATA", data)
       return data;
     } catch (error) {
       console.error("Failed to fetch user info:", error);
