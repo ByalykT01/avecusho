@@ -95,8 +95,8 @@ export const user_data = pgTable("user_data", {
   city: text("city"),
   postcode: text("postcode"),
   street: text("street"),
-  housenumber: text("housenumber"),
-  apartmentnumber: text("apartmentnumber"),
+  houseNumber: text("houseNumber"),
+  apartmentNumber: text("apartmentNumber"),
   phoneNumber: text("phoneNumber"),
 });
 

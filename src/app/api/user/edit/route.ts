@@ -1,7 +1,7 @@
 import { ExtendedUserDataSchema } from "~/schemas";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { getUserFromDb, upsertUser } from "~/server/queries";
+import { upsertUser } from "~/server/queries";
 
 interface ApiSuccessResponse<T> {
   success: true;

@@ -189,8 +189,8 @@ export async function getUserWithDetails(id: string) {
       city: user_data.city,
       postcode: user_data.postcode,
       street: user_data.street,
-      housenumber: user_data.housenumber,
-      apartmentnumber: user_data.apartmentnumber,
+      houseNumber: user_data.houseNumber,
+      apartmentNumber: user_data.apartmentNumber,
       phoneNumber: user_data.phoneNumber,
     })
     .from(users)
@@ -233,8 +233,8 @@ export async function upsertUser(
           city: userData.city,
           postcode: userData.postcode,
           street: userData.street,
-          housenumber: userData.houseNumber,
-          apartmentnumber: userData.apartmentNumber,
+          houseNumber: userData.houseNumber,
+          apartmentNumber: userData.apartmentNumber,
           phoneNumber: userData.phoneNumber,
         })
         .where(eq(user_data.userId, userData.userId));
@@ -248,8 +248,8 @@ export async function upsertUser(
           city: userData.city,
           postcode: userData.postcode,
           street: userData.street,
-          housenumber: userData.houseNumber,
-          apartmentnumber: userData.apartmentNumber,
+          houseNumber: userData.houseNumber,
+          apartmentNumber: userData.apartmentNumber,
           phoneNumber: userData.phoneNumber,
         });
     }
