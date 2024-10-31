@@ -52,7 +52,7 @@ export default function FullItemText(props: { item: Item }) {
       toast.success("Item added to cart!");
     } catch (error) {
       console.error("Failed to add item to cart:", error);
-      toast.error("Failed to add item to cart.");
+      toast.error("Failed to add item to cart. Log In");
     }
   };
 

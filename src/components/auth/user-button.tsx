@@ -42,7 +42,7 @@ export function UserButton() {
       <DropdownMenuContent align="end" className="w-48">
         {user ? (
           <>
-            <Link href={"/settings"}>
+            <Link href={"/profile"}>
               <DropdownMenuItem className="text-left">Account</DropdownMenuItem>
             </Link>
             <LogoutButton>

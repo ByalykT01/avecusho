@@ -12,7 +12,7 @@ import {
   index,
   uuid,
   pgEnum,
-  uniqueIndex
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -86,64 +86,68 @@ export const items = pgTable(
   }),
 );
 
+export const user_data = pgTable("user_data", {
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .primaryKey(),
+  country: text("country"),
+  state: text("state"),
+  city: text("city"),
+  postcode: text("postcode"),
+  street: text("street"),
+  housenumber: text("housenumber"),
+  apartmentnumber: text("apartmentnumber"),
+  phoneNumber: text("phoneNumber"),
+});
 
 // every user has their own unique cart
-export const cart = pgTable(
-  "cart",
-  {
-    id: serial("id").primaryKey(),
-    userId: uuid("userId").references(() => users.id, { onDelete: "cascade" }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  }
-);
+export const cart = pgTable("cart", {
+  id: serial("id").primaryKey(),
+  userId: uuid("userId").references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
 
-//cart item connects user thru cart with item thru items 
-export const cartItems = pgTable(
-  "cart_item",
-  {
-    id: serial("id").primaryKey(),
-    cartId: integer("cartId").references(() => cart.id, { onDelete: "cascade" }),
-    itemId: integer("itemId").references(() => items.id, { onDelete: "cascade" }),
-    addedAt: timestamp("added_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  }
-);
+//cart item connects user thru cart with item thru items
+export const cartItems = pgTable("cart_item", {
+  id: serial("id").primaryKey(),
+  cartId: integer("cartId").references(() => cart.id, { onDelete: "cascade" }),
+  itemId: integer("itemId").references(() => items.id, { onDelete: "cascade" }),
+  addedAt: timestamp("added_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
 
-export const authenticators = pgTable(
-  "authenticator",
-  {
-    credentialID: uuid("credentialID").notNull().unique(),
-    userId: uuid("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    providerAccountId: text("providerAccountId").notNull(),
-    credentialPublicKey: text("credentialPublicKey").notNull(),
-    counter: integer("counter").notNull(),
-    credentialDeviceType: text("credentialDeviceType").notNull(),
-    credentialBackedUp: boolean("credentialBackedUp").notNull(),
-    transports: text("transports"),
-  },
-  (authenticator) => ({
-    compositePK: primaryKey(authenticator.userId, authenticator.credentialID),
-  }),
-);
+export const authenticators = pgTable("authenticator", {
+  credentialID: uuid("credentialID").notNull().unique(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: text("transports"),
+});
 
 export const verificationToken = pgTable(
-  'verificationToken',
+  "verificationToken",
   {
     id: uuid("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    email: text('email').notNull(),
-    token: text('token').notNull(),
+    email: text("email").notNull(),
+    token: text("token").notNull(),
     expires: timestamp("expires", { withTimezone: true }).notNull(),
   },
   (table) => {
     return {
-      emailTokenUniqueIdx: uniqueIndex('email_token_unique').on(table.email, table.token),
+      emailTokenUniqueIdx: uniqueIndex("email_token_unique").on(
+        table.email,
+        table.token,
+      ),
     };
-  }
+  },
 );

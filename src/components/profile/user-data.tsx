@@ -14,19 +14,21 @@ import { useEffect, useState } from "react";
 import { LogoutButton } from "../auth/logout-button";
 import { Button } from "../ui/button";
 import Spinner from "../spinner";
+import { redirect, useRouter } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default function UserData() {
+  const router = useRouter();
   const user = useCurrentUser() as UserDataProps;
   const [boughtItems, setBoughtItems] = useState<Item[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [opacity, setOpacity] = useState(0); // State for opacity
+  const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
     if (!user) {
-      window.location.reload();
+      redirect("/auth/login");
     }
   }, [user]);
 
@@ -56,7 +58,7 @@ export default function UserData() {
           );
         } finally {
           setLoadingItems(false);
-          setOpacity(1); // Set opacity to 1 after loading
+          setOpacity(1);
         }
       }
     };
@@ -86,11 +88,14 @@ export default function UserData() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-4" style={{ opacity, transition: "opacity 0.5s ease-in-out" }}>
+    <div
+      className="mx-auto max-w-5xl px-4"
+      style={{ opacity, transition: "opacity 0.5s ease-in-out" }}
+    >
       <Card className="bg-gradient-to-br from-white to-gray-50">
         <CardHeader className="pb-8">
           <div className="flex flex-col items-center space-y-6 md:flex-row md:space-x-8 md:space-y-0">
-            <div className="relative">
+            <div className="relative ">
               {user.image ? (
                 <div className="h-32 w-32 overflow-hidden rounded-full ring-4 ring-blue-100">
                   <Image
@@ -102,21 +107,31 @@ export default function UserData() {
                   />
                 </div>
               ) : (
-                <div className="flex h-32 w-32 items-center justify-center rounded-full bg-blue-100">
+                <div className="flex  h-32 w-32 items-center justify-center rounded-full bg-blue-100">
                   <FaUser className="text-4xl text-blue-500" />
                 </div>
               )}
             </div>
-            <div className="text-center md:text-left">
+            <div className=" text-center md:text-left">
               <CardTitle className="text-3xl font-bold text-gray-900">
                 {user.name}
               </CardTitle>
               <p className="mt-2 text-lg text-gray-600">{user.email}</p>
-              <LogoutButton>
-                <Button className="mt-4 bg-blue-600 hover:bg-blue-700">
-                  Sign Out
-                </Button>
-              </LogoutButton>
+              <div className="w-full">
+                <div className="mt-4 justify-center md:justify-start">
+                  <Button
+                    className=" bg-blue-600 w-1/2 hover:bg-blue-700"
+                    onClick={() => router.push("/profile/edit")}
+                  >
+                    Edit Profile
+                  </Button>
+                </div>
+                <LogoutButton>
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-700">
+                    Sign Out
+                  </Button>
+                </LogoutButton>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -150,7 +165,7 @@ export default function UserData() {
                   <p className="text-sm text-gray-500">Last Purchase</p>
                   <p className="text-2xl font-bold">
                     {boughtItems.length > 0
-                      ? new Date(boughtItems[0].updatedAt).toLocaleDateString()
+                      ? new Date(boughtItems[0]?.updatedAt).toLocaleDateString()
                       : "N/A"}
                   </p>
                 </div>

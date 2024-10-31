@@ -1,9 +1,13 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from "bcryptjs";
-import { cart, cartItems, items, users } from "./db/schema";
+import { cart, cartItems, items, user_data, users } from "./db/schema";
 import { and, eq } from "drizzle-orm";
-import type { NewItemProps, UserDataProps } from "~/lib/definitions";
+import type {
+  AllAdditionalUserDataProps,
+  NewItemProps,
+  UserDataProps,
+} from "~/lib/definitions";
 
 export async function getItems() {
   const items = await db.query.items.findMany({
@@ -14,9 +18,9 @@ export async function getItems() {
 
 export async function getBoughtItems(userId: string) {
   const items = await db.query.items.findMany({
-    where: (model, {eq}) => eq(model.userId, userId)
-  })
-  
+    where: (model, { eq }) => eq(model.userId, userId),
+  });
+
   return items;
 }
 
@@ -92,17 +96,15 @@ export async function findItemFromCart(itemId: number, userId: string) {
     throw new Error("No cart found for this user.");
   }
 
-  // Check if the item exists in the database
   const foundItem = await getOneItem(itemId);
   if (!foundItem) {
     throw new Error("Item not found in the database.");
   }
 
-  // Get items in the user's cart and check for the specific item
   const foundCartItems = await getCartItems(userId);
   const foundItemInCart = foundCartItems?.find((e) => e.itemId === itemId);
 
-  return foundItemInCart ?? null; // Return null if the item is not found in the cart
+  return foundItemInCart ?? null;
 }
 
 export async function addItemToCart(itemId: number, userId: string) {
@@ -144,12 +146,13 @@ export async function addItemToCart(itemId: number, userId: string) {
   return { message: "Item added to cart successfully!", cartId, itemId };
 }
 
-export async function updateItemOnPurchase(itemId: number, userId: string){
-  const updateddItem = await db.update(items)
+export async function updateItemOnPurchase(itemId: number, userId: string) {
+  const updateddItem = await db
+    .update(items)
     .set({ userId: userId })
     .where(eq(items.id, itemId));
-  
-  return updateddItem
+
+  return updateddItem;
 }
 
 export async function getUserByEmail(email: string) {
@@ -170,6 +173,91 @@ export async function getUserById(id: string) {
   return user as UserDataProps;
 }
 
+export async function getUserWithDetails(id: string) {
+  const user = await db
+    .select({
+      //user fields
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      emailVerified: users.emailVerified,
+      image: users.image,
+      role: users.role,
+      // user_data fields
+      country: user_data.country,
+      state: user_data.state,
+      city: user_data.city,
+      postcode: user_data.postcode,
+      street: user_data.street,
+      housenumber: user_data.housenumber,
+      apartmentnumber: user_data.apartmentnumber,
+      phoneNumber: user_data.phoneNumber,
+    })
+    .from(users)
+    .leftJoin(user_data, eq(users.id, user_data.userId))
+    .where(eq(users.id, id))
+    .limit(1);
+
+  return user[0] ?? null;
+}
+
+interface AdditionalUserDataPropsId extends AllAdditionalUserDataProps{
+  userId: string
+}
+export async function upsertUser(
+  userData: AdditionalUserDataPropsId,
+) {
+  try {
+    // Update user details
+    await db
+      .update(users)
+      .set({
+        name: userData.name,
+        email: userData.email,
+        image: userData.image,
+      })
+      .where(eq(users.id, userData.userId));
+
+    // Check if user_data exists
+    const existingUserData = await db
+      .select()
+      .from(user_data)
+      .where(eq(user_data.userId, userData.userId));
+
+    if (existingUserData.length > 0) {
+      await db
+        .update(user_data)
+        .set({
+          country: userData.country,
+          state: userData.state,
+          city: userData.city,
+          postcode: userData.postcode,
+          street: userData.street,
+          housenumber: userData.houseNumber,
+          apartmentnumber: userData.apartmentNumber,
+          phoneNumber: userData.phoneNumber,
+        })
+        .where(eq(user_data.userId, userData.userId));
+    } else {
+      await db
+        .insert(user_data)
+        .values({
+          userId: userData.userId,
+          country: userData.country,
+          state: userData.state,
+          city: userData.city,
+          postcode: userData.postcode,
+          street: userData.street,
+          housenumber: userData.houseNumber,
+          apartmentnumber: userData.apartmentNumber,
+          phoneNumber: userData.phoneNumber,
+        });
+    }
+  } catch (e) {
+    console.error('Error upserting user:', e);
+  }
+}
+
 export async function updateUser(user: UserDataProps) {
   try {
     await db.update(users).set(user).where(eq(users.id, user.id));
@@ -179,17 +267,20 @@ export async function updateUser(user: UserDataProps) {
 }
 
 export async function createNewItem(body: NewItemProps) {
-  try{
-    const newItemId = await db.insert(items).values({
-      name: body.name,
-      url: body.url,
-      price: body.price.toFixed(2),
-      description: body.description
-    }).returning({ insertedId: items.id });
-    
-    return newItemId
-  } catch(e){
-    throw new Error(e as string)
+  try {
+    const newItemId = await db
+      .insert(items)
+      .values({
+        name: body.name,
+        url: body.url,
+        price: body.price.toFixed(2),
+        description: body.description,
+      })
+      .returning({ insertedId: items.id });
+
+    return newItemId;
+  } catch (e) {
+    throw new Error(e as string);
   }
 }
 

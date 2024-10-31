@@ -7,32 +7,58 @@ import {
   publicRoutes,
 } from "routes";
 
+const compiledPublicRoutes = publicRoutes.map(route => new RegExp(route));
+const authRoutesSet = new Set(authRoutes);
+
+const MAX_REDIRECTS = 5;
+
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.some(route => new RegExp(route).test(nextUrl.pathname));  
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-
-  if (isApiAuthRoute) {
-    return;
-  }
-
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  try {
+    const { nextUrl } = req;
+    if (!nextUrl?.pathname) {
+      return Response.redirect(new URL("/auth/login", nextUrl));
     }
+
+    const redirectCount = parseInt(req.headers.get("x-redirect-count") ?? "0");
+    if (redirectCount > MAX_REDIRECTS) {
+      return new Response("Too many redirects", { status: 500 });
+    }
+
+    const isLoggedIn = !!req.auth;
+    const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+    const isPublicRoute = compiledPublicRoutes.some(route => route.test(nextUrl.pathname));
+    const isAuthRoute = authRoutesSet.has(nextUrl.pathname);
+
+    if (isApiAuthRoute) {
+      return;
+    }
+
+    if (isAuthRoute) {
+      if (isLoggedIn) {
+        try {
+          return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        } catch (error) {
+          console.error("Redirect error:", error);
+          return Response.redirect(new URL("/auth/login", nextUrl));
+        }
+      }
+      return;
+    }
+
+    // Handle protected routes
+    if (!isLoggedIn && !isPublicRoute) {
+      const response = Response.redirect(new URL("/auth/login", nextUrl));
+      response.headers.set("x-redirect-count", (redirectCount + 1).toString());
+      return response;
+    }
+
     return;
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return Response.redirect(new URL("/auth/login", req.nextUrl));
   }
-
-  if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
-  }
-
-  return;
 });
 
 // Optionally, don't invoke Middleware on some paths
