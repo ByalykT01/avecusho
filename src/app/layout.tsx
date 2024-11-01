@@ -9,8 +9,6 @@ import { Toaster } from "~/components/ui/sonner";
 import TopNav from "~/components/nav/topnav";
 import Footer from "~/components/nav/footer";
 
-// import { ThemeProvider } from "~/providers/ThemeProvider";
-
 export const metadata: Metadata = {
   title: "Avecusho",
   description: "Genius artist's store",

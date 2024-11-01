@@ -25,7 +25,7 @@ export default function MainPage() {
             alt="Artist Photo"
             width={600}
             height={800}
-            className="w-3/4 rounded-lg object-cover shadow-lg md:w-full transition-transform duration-500 ease-in-out transform hover:scale-105"
+            className="w-3/4 rounded-lg object-cover shadow-lg md:w-full"
           />
         </div>
         <div className={`text-lg leading-relaxed text-gray-700 md:w-1/2 transition-opacity duration-500 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"}`}>

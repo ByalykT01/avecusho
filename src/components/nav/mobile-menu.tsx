@@ -8,6 +8,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) =>
+  
   isOpen && (
     <div className="absolute right-0 top-16 flex w-full flex-col bg-white text-center text-black shadow-lg">
       <Link href="/store" onClick={onClose}>
