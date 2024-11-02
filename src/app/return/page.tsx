@@ -35,6 +35,7 @@ export default function Return() {
   }
 
   if (status === 'complete') {
+    
     return (
       <section id="success" className="flex flex-col items-center justify-center m-auto  bg-green-100 p-4">
         <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">

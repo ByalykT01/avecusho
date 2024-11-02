@@ -147,10 +147,24 @@ export async function addItemToCart(itemId: number, userId: string) {
 }
 
 export async function updateItemOnPurchase(itemId: number, userId: string) {
+  const existingItem = await db
+    .select()
+    .from(items)
+    .where(eq(items.id, itemId))
+    .limit(1);
+
+  if (!existingItem.length) {
+    return {
+      success: false,
+      error: "Item not found",
+    };
+  }
+
   const updateddItem = await db
     .update(items)
-    .set({ userId: userId })
-    .where(eq(items.id, itemId));
+    .set({ userId })
+    .where(eq(items.id, itemId))
+    .returning();
 
   return updateddItem;
 }
@@ -201,12 +215,10 @@ export async function getUserWithDetails(id: string) {
   return user[0] ?? null;
 }
 
-interface AdditionalUserDataPropsId extends AllAdditionalUserDataProps{
-  userId: string
+interface AdditionalUserDataPropsId extends AllAdditionalUserDataProps {
+  userId: string;
 }
-export async function upsertUser(
-  userData: AdditionalUserDataPropsId,
-) {
+export async function upsertUser(userData: AdditionalUserDataPropsId) {
   try {
     // Update user details
     await db
@@ -239,22 +251,20 @@ export async function upsertUser(
         })
         .where(eq(user_data.userId, userData.userId));
     } else {
-      await db
-        .insert(user_data)
-        .values({
-          userId: userData.userId,
-          country: userData.country,
-          state: userData.state,
-          city: userData.city,
-          postcode: userData.postcode,
-          street: userData.street,
-          houseNumber: userData.houseNumber,
-          apartmentNumber: userData.apartmentNumber,
-          phoneNumber: userData.phoneNumber,
-        });
+      await db.insert(user_data).values({
+        userId: userData.userId,
+        country: userData.country,
+        state: userData.state,
+        city: userData.city,
+        postcode: userData.postcode,
+        street: userData.street,
+        houseNumber: userData.houseNumber,
+        apartmentNumber: userData.apartmentNumber,
+        phoneNumber: userData.phoneNumber,
+      });
     }
   } catch (e) {
-    console.error('Error upserting user:', e);
+    console.error("Error upserting user:", e);
   }
 }
 

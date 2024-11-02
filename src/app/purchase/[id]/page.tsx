@@ -8,6 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import type { Stripe as StripeApi } from "stripe";
 import { useCurrentUser } from "hooks/use-current-user";
+import { usePathname } from "next/navigation";
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
@@ -24,6 +25,7 @@ export default function App({
 }) {
   const idAsNumber = Number(itemId);
   const userId = useCurrentUser()?.id;
+    const currentPath = usePathname();
   //find the item obj
   const fetchItem = useCallback(async () => {
     try {
@@ -57,6 +59,7 @@ export default function App({
           default_price: item.default_price as string,
           itemId: idAsNumber,
           userId: userId,
+                    returnPath: currentPath,
         }),
       });
 
@@ -74,7 +77,7 @@ export default function App({
     } catch (error) {
       throw error;
     }
-  }, [fetchItem, idAsNumber, userId]);
+  }, [fetchItem, idAsNumber, userId, currentPath]);
 
   const options = { fetchClientSecret };
 
