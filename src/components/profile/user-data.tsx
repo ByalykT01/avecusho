@@ -164,7 +164,7 @@ export default function UserData() {
                 <div>
                   <p className="text-sm text-gray-500">Last Purchase</p>
                   <p className="text-2xl font-bold">
-                    {boughtItems.length > 0
+                    {boughtItems.length > 0 
                       ? new Date(boughtItems[0]?.updatedAt).toLocaleDateString()
                       : "N/A"}
                   </p>

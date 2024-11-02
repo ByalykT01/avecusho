@@ -9,7 +9,7 @@ export default function ItemPage({
   const intItemId = Number(itemId);
   if (Number.isNaN(intItemId)) throw new Error("Invalid item ID");
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <FullItemImageView id={intItemId} />
     </div>
   );
