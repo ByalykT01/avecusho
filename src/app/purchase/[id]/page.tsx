@@ -79,7 +79,7 @@ export default function App({
   const options = { fetchClientSecret };
 
   return (
-    <div id="checkout" className="mx-auto">
+    <div id="checkout" className="w-full mt-12">
       <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>

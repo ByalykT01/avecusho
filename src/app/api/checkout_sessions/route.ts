@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
       ],
       mode: "payment",
       return_url: `${req.headers.get("origin")}/return?session_id={CHECKOUT_SESSION_ID}`,
-      automatic_tax: { enabled: true },
     });
     const updatedItem = await updateItemOnPurchase(itemId, userId);
     //Return client secret for further usage
