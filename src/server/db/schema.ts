@@ -28,6 +28,28 @@ export const db = drizzle(pool);
 
 export const userRoleEnum = pgEnum("user_role", ["ADMIN", "USER"]);
 
+export const dateRequests = pgTable("date_request", {
+  id: serial("id").primaryKey(),
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  status: text("status").notNull(), // 'pending', 'accepted', 'rejected'
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  location: text("location").notNull(),
+  stNicholasGift: text("st_nicholas_gift"),
+  timePreference: text("time_preference").notNull(),
+  mood: text("mood").notNull(),
+  dessert: text("dessert"), // Remove .notNull()
+  gift: text("gift").notNull(),
+  endingActivity: text("ending_activity"), // Remove .notNull()
+  response: text("response"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+});
+
 export const users = pgTableNoPrefix("user", {
   id: uuid("id")
     .primaryKey()
