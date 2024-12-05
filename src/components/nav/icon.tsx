@@ -1,10 +1,7 @@
-// Logo.js
 import Image from "next/image";
-import Link from "next/link";
 import icon from "public/avecusho.png"
 
 const Logo = () => (
-  <Link href={"/store"}>
   <div className="flex items-center">
     <Image
       src={icon}
@@ -14,7 +11,6 @@ const Logo = () => (
       alt="Avecusho"
     />
   </div>
-  </Link>
 );
 
 export default Logo;
