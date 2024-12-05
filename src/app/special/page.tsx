@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { RoleGate } from "~/components/auth/role-gate";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
-import { Heart, PartyPopper, GiftIcon, Sparkles, Clock, MapPin, Smile, X } from "lucide-react";
+import { 
+  Heart, PartyPopper, GiftIcon, Sparkles, Clock, MapPin, Smile 
+} from "lucide-react";
 import confetti from "canvas-confetti";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { toast } from "sonner";
@@ -23,7 +25,7 @@ interface DateQuestion {
   icon: React.ReactNode;
 }
 
-const dateQuestions: DateQuestion[] = [
+const DATE_QUESTIONS: DateQuestion[] = [
   {
     question: "Where would you like to go?",
     icon: <MapPin className="h-6 w-6 text-pink-500" />,
@@ -105,20 +107,24 @@ const dateQuestions: DateQuestion[] = [
   },
 ];
 
-export default function SpecialPage() {
+export default function SpecialDateRequestPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<string[]>([]);
   const [showFinal, setShowFinal] = useState(false);
   const [rejected, setRejected] = useState(false);
   const [stNicholasGift, setStNicholasGift] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSelection = (value: string) => {
-    const newSelections = [...selections];
-    newSelections[currentStep] = value;
-    setSelections(newSelections);
-  };
+  const handleSelection = useCallback((value: string) => {
+    setSelections(prev => {
+      const newSelections = [...prev];
+      newSelections[currentStep] = value;
+      return newSelections;
+    });
+  }, [currentStep]);
 
-  async function submitDateRequest(selections: string[]) {
+  const submitDateRequest = useCallback(async (selections: string[]) => {
+    setIsLoading(true);
     try {
       const response = await fetch("/api/date-request", {
         method: "POST",
@@ -141,13 +147,16 @@ export default function SpecialPage() {
       return await response.json();
     } catch (error) {
       console.error("Error submitting date request:", error);
+      toast.error("Failed to save date request");
       throw error;
+    } finally {
+      setIsLoading(false);
     }
-  }
+  }, [stNicholasGift]);
 
-  const handleNext = async () => {
-    if (currentStep < dateQuestions.length - 1) {
-      setCurrentStep(currentStep + 1);
+  const handleNext = useCallback(async () => {
+    if (currentStep < DATE_QUESTIONS.length - 1) {
+      setCurrentStep(prev => prev + 1);
     } else {
       try {
         await submitDateRequest(selections);
@@ -159,26 +168,79 @@ export default function SpecialPage() {
           colors: ['#FF69B4', '#FFC0CB', '#FF1493']
         });
       } catch (error) {
-        toast.error("Failed to save date request");
+        // Error handling is done in submitDateRequest
       }
     }
-  };
+  }, [currentStep, selections, submitDateRequest]);
 
-  const handleReject = () => {
-    setRejected(true);
-  };
+  const currentQuestion = useMemo(() => 
+    DATE_QUESTIONS[currentStep], [currentStep]
+  );
+
+  const renderProgressDots = useMemo(() => {
+    return DATE_QUESTIONS.map((_, index) => (
+      <div
+        key={index}
+        className={`h-2 w-2 rounded-full mx-1 transition-all duration-300 
+          ${index <= currentStep ? 'bg-pink-500' : 'bg-pink-200'}`}
+      />
+    ));
+  }, [currentStep]);
+
+  const renderFinalDateSummary = useMemo(() => {
+    return selections.map((selection, index) => {
+      const question = DATE_QUESTIONS[index];
+      const selectedOption = question?.options.find(
+        (opt) => opt.id === selection,
+      );
+      return (
+        <li 
+          key={index} 
+          className="flex items-start space-x-3 bg-white p-3 rounded-lg shadow-md"
+        >
+          <Heart className="h-6 w-6 text-pink-500 mt-1 flex-shrink-0" />
+          <div>
+            <span className="font-medium text-gray-800">
+              {question?.question}
+            </span>
+            <p className="text-gray-600 font-semibold">{selectedOption?.title}</p>
+          </div>
+        </li>
+      );
+    });
+  }, [selections]);
+
+  if (rejected) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-b from-pink-50 to-purple-100 py-12 flex items-center justify-center">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-2xl border-4 border-gray-200">
+          <h2 className="mb-4 text-2xl font-bold text-gray-800">
+            Oh no! Maybe next time? 😢
+          </h2>
+          <p className="text-gray-600">
+            I'll try to come up with something better!
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <RoleGate allowedRole="ADMIN">
       <div className="min-h-screen w-full bg-gradient-to-b from-pink-50 to-purple-100 py-12 flex items-center justify-center">
         <div className="w-full max-w-4xl px-4">
-          {!showFinal && !rejected ? (
+          {!showFinal ? (
             <div className="rounded-2xl bg-white p-8 shadow-2xl border-4 border-pink-200 transform transition-all hover:scale-[1.02]">
-              <div className="flex items-center justify-center mb-8 space-x-3">
-                {dateQuestions[currentStep].icon}
-                <h1 className="text-center text-3xl font-bold text-pink-600">
-                  {dateQuestions[currentStep].question}
-                </h1>
+              <div className="flex flex-col items-center justify-center mb-8">
+                <div className="flex items-center space-x-3 mb-4">
+                  {currentQuestion?.icon}
+                  <h1 className="text-center text-3xl font-bold text-pink-600">
+                    {currentQuestion?.question}
+                  </h1>
+                </div>
+                <div className="flex justify-center mb-4">
+                  {renderProgressDots}
+                </div>
               </div>
 
               <RadioGroup
@@ -186,7 +248,7 @@ export default function SpecialPage() {
                 value={selections[currentStep]}
                 onValueChange={handleSelection}
               >
-                {dateQuestions[currentStep].options.map((option) => (
+                {currentQuestion?.options.map((option) => (
                   <div
                     key={option.id}
                     className="relative group"
@@ -221,7 +283,7 @@ export default function SpecialPage() {
                 ))}
               </RadioGroup>
 
-              {currentStep === dateQuestions.length - 1 && (
+              {currentStep === DATE_QUESTIONS.length - 1 && (
                 <div className="mt-8 space-y-4">
                   <div className="rounded-lg border-2 border-pink-300 bg-pink-50/50 p-6 animate-pulse-soft">
                     <div className="flex items-center mb-4 space-x-2">
@@ -245,27 +307,33 @@ export default function SpecialPage() {
               )}
 
               <div className="mt-8 flex justify-center space-x-4">
+                {currentStep > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(prev => prev - 1)}
+                    className="group relative inline-flex items-center justify-center rounded-full px-8 py-3 
+                    font-medium text-pink-600 border-pink-300 hover:bg-pink-50"
+                  >
+                    Previous
+                  </Button>
+                )}
                 <Button
                   onClick={handleNext}
-                  disabled={!selections[currentStep]}
+                  disabled={!selections[currentStep] || isLoading}
                   className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-pink-500 px-8 py-3 
                   font-medium text-white shadow-xl transition-all hover:bg-pink-600 
                   focus:ring-4 focus:ring-pink-300 disabled:opacity-50"
                 >
-                  <Heart className="mr-2 h-5 w-5 animate-pulse" />
-                  {currentStep === dateQuestions.length - 1 ? "Complete" : "Next"}
+                  {isLoading ? (
+                    <span className="animate-pulse">Submitting...</span>
+                  ) : (
+                    <>
+                      <Heart className="mr-2 h-5 w-5 animate-pulse" />
+                      {currentStep === DATE_QUESTIONS.length - 1 ? "Complete" : "Next"}
+                    </>
+                  )}
                 </Button>
-              
               </div>
-            </div>
-          ) : rejected ? (
-            <div className="rounded-2xl bg-white p-8 text-center shadow-2xl border-4 border-gray-200">
-              <h2 className="mb-4 text-2xl font-bold text-gray-800">
-                Oh no! Maybe next time? 😢
-              </h2>
-              <p className="text-gray-600">
-                I'll try to come up with something better!
-              </p>
             </div>
           ) : (
             <div className="rounded-2xl bg-white p-8 text-center shadow-2xl border-4 border-pink-200 relative overflow-hidden">
@@ -283,23 +351,7 @@ export default function SpecialPage() {
                   Our Perfect Date Plan:
                 </h3>
                 <ul className="space-y-4">
-                  {selections.map((selection, index) => {
-                    const question = dateQuestions[index];
-                    const selectedOption = question.options.find(
-                      (opt) => opt.id === selection,
-                    );
-                    return (
-                      <li key={index} className="flex items-start space-x-3 bg-white p-3 rounded-lg shadow-md">
-                        <Heart className="h-6 w-6 text-pink-500 mt-1 flex-shrink-0" />
-                        <div>
-                          <span className="font-medium text-gray-800">
-                            {question.question}
-                          </span>
-                          <p className="text-gray-600 font-semibold">{selectedOption?.title}</p>
-                        </div>
-                      </li>
-                    );
-                  })}
+                  {renderFinalDateSummary}
                 </ul>
                 {stNicholasGift && (
                   <div className="mt-6 rounded-lg bg-pink-100 p-4 border border-pink-300">
@@ -321,4 +373,3 @@ export default function SpecialPage() {
     </RoleGate>
   );
 }
-
