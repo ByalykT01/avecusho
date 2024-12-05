@@ -311,7 +311,7 @@ export default function SpecialPage() {
                 )}
               </div>
               <p className="mt-8 text-lg text-pink-600 font-medium">
-                See you soon! 💖
+                See you soon, Aurora! 💖
               </p>
             </div>
           )}
