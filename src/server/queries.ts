@@ -130,9 +130,9 @@ export async function addItemToCart(itemId: number, userId: string) {
   }
 
   const foundCartItems = await getCartItems(userId);
-  foundCartItems?.map((item) => {
-    if (item.itemId === itemId) return null;
-  });
+  if (foundCartItems?.some((item) => item.itemId === itemId)) {
+    throw new Error("Item is already in the cart");
+  }
 
   const addedItem = await db.insert(cartItems).values({
     itemId: itemId,
@@ -160,13 +160,13 @@ export async function updateItemOnPurchase(itemId: number, userId: string) {
     };
   }
 
-  const updateddItem = await db
+  const updatedItem = await db
     .update(items)
     .set({ userId })
     .where(eq(items.id, itemId))
     .returning();
 
-  return updateddItem;
+  return updatedItem;
 }
 
 export async function getUserByEmail(email: string) {
@@ -265,6 +265,7 @@ export async function upsertUser(userData: AdditionalUserDataPropsId) {
     }
   } catch (e) {
     console.error("Error upserting user:", e);
+    throw e instanceof Error ? e : new Error("Failed to upsert user");
   }
 }
 
@@ -272,7 +273,7 @@ export async function updateUser(user: UserDataProps) {
   try {
     await db.update(users).set(user).where(eq(users.id, user.id));
   } catch (e) {
-    throw new Error(e as string);
+    throw e instanceof Error ? e : new Error("Failed to update user");
   }
 }
 
@@ -290,7 +291,7 @@ export async function createNewItem(body: NewItemProps) {
 
     return newItemId;
   } catch (e) {
-    throw new Error(e as string);
+    throw e instanceof Error ? e : new Error("Failed to create item");
   }
 }
 
@@ -308,13 +309,13 @@ export async function comparePasswords(
   return false;
 }
 
-export async function getUserFromDb(email: string, hashedPassword: string) {
+export async function getUserFromDb(email: string, password: string) {
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.email, email),
   });
 
-  // Verify hashed password if user is found
-  if (user && (await comparePasswords(user.password, hashedPassword))) {
+  // Verify the plaintext password candidate against the stored hash.
+  if (user?.password && (await comparePasswords(password, user.password))) {
     return user;
   }
 
