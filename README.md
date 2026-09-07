@@ -1,165 +1,160 @@
 # Avecusho Art Store
 
-A modern e-commerce platform built for artist to showcase and sell her artwork. This project uses Next.js 14 with App Router, featuring server-side rendering, dynamic routing, and a seamless shopping experience.
+Online gallery and store for artist Aurora Khokhliuk: browse artwork, manage a shopping cart, and check out with Stripe. Built with Next.js 14 (App Router), PostgreSQL with Drizzle ORM, and NextAuth.
+
+**Live demo:** https://avecusho.vercel.app
 
 ## Features
 
-### User Features
-- 🎨 Browse artwork gallery
-- 🛍️ Shopping cart functionality
-- 💳 Secure checkout with Stripe
-- 👤 User authentication
-- 📱 Responsive design
-- 🖼️ Dynamic image loading and optimization
+**Storefront**
 
-### Admin Features
-- 📤 Upload new artwork
-- 💼 Manage inventory
-- 📊 View sales statistics
-- 👥 User management
+- Artwork gallery with dedicated item pages
+- Shopping cart (add, view, remove)
+- Stripe checkout with an embedded payment form
+- Sign-in with Google or email/password (NextAuth)
+- Contact page
 
-### Technical Features
-- 🔐 Next-Auth authentication
-- 🎯 TypeScript for type safety
-- 🎨 Tailwind CSS for styling
-- 🗄️ PostgreSQL database with Drizzle ORM
-- 💳 Stripe payment integration
-- 📤 UploadThing for image uploads
-- 📊 PostHog analytics integration
+**Artist admin**
 
-## Tech Stack
+- Upload new artwork (images via UploadThing)
+- Role-gated admin area
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Database**: PostgreSQL
-- **ORM**: Drizzle
-- **Authentication**: Next-Auth
-- **Styling**: Tailwind CSS, Shadcn UI
-- **Payment Processing**: Stripe
-- **Image Upload**: UploadThing
-- **Analytics**: PostHog
+## Tech stack
 
-## Getting Started
+- Framework: Next.js 14 (App Router), React 18, TypeScript
+- Database: PostgreSQL, Drizzle ORM
+- Authentication: NextAuth v5 (Google OAuth, credentials)
+- Payments: Stripe
+- Image uploads: UploadThing
+- Styling: Tailwind CSS, shadcn/ui
+- Analytics: PostHog
 
-### Prerequisites
+## Getting started
 
-- Node.js 18+ 
-- PostgreSQL
-- Stripe account
-- UploadThing account
-
-### Environment Variables
-
-Create a `.env` file with:
-
-```bash
-# Database
-POSTGRES_URL=
-
-# Next Auth
-NEXTAUTH_URL=
-NEXTAUTH_SECRET=
-
-# Google OAuth
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_SECRET_KEY=
-
-# UploadThing
-UPLOADTHING_SECRET=
-UPLOADTHING_APP_ID=
-
-# PostHog
-NEXT_PUBLIC_POSTHOG_KEY=
-```
-
-### Installation
+Prerequisites: Node.js 18+, pnpm 9, a PostgreSQL database, and accounts for Stripe, Google OAuth, and UploadThing (only needed for the features that use them).
 
 1. Clone the repository:
-```bash
-git clone git@github.com:ByalykT01/avecusho.git
-```
+
+   ```bash
+   git clone git@github.com:ByalykT01/avecusho.git
+   cd avecusho
+   ```
 
 2. Install dependencies:
-```bash
-npm install
-```
 
-3. Set up the database:
-```bash
-npm run db:migrate
-```
+   ```bash
+   pnpm install
+   ```
 
-4. Run the development server:
-```bash
-npm run dev
-```
+3. Configure the environment:
 
-5. Open [http://localhost:3000](http://localhost:3000)
+   ```bash
+   cp .env.example .env
+   ```
 
-> Note: the app's database client (`src/server/db`, via `@vercel/postgres`)
-> speaks the Neon wire protocol and only accepts Vercel Postgres pooled URLs
-> (or `localhost`). A plain local PostgreSQL container is not sufficient for
-> `next dev` — use a Vercel/Neon-backed `POSTGRES_URL`.
+   Fill in the values described below.
+
+4. Apply the database migrations:
+
+   ```bash
+   pnpm db:migrate
+   ```
+
+5. Start the development server:
+
+   ```bash
+   pnpm dev
+   ```
+
+   Open http://localhost:3000.
+
+Note on the database connection: the app's database client (`src/server/db`, via `@vercel/postgres`) speaks the Neon wire protocol, so `POSTGRES_URL` must be a Vercel/Neon-compatible URL. A plain local PostgreSQL container is not sufficient for `next dev` — use a Neon/Vercel database or a compatible proxy.
+
+## Environment variables
+
+| Variable                                    | Required           | Used for                                                                               |
+| ------------------------------------------- | ------------------ | -------------------------------------------------------------------------------------- |
+| `POSTGRES_URL`                              | Yes                | Database access (Drizzle, Auth.js adapter, queries)                                    |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | For Google sign-in | NextAuth Google provider                                                               |
+| `NEXTAUTH_SECRET`                           | Yes in production  | NextAuth session encryption                                                            |
+| `NEXTAUTH_URL`                              | Yes in production  | NextAuth callbacks (defaults locally)                                                  |
+| `STRIPE_SECRET_KEY`                         | For checkout       | Checkout Sessions, product lookup                                                      |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`        | For checkout       | Stripe.js on the purchase page                                                         |
+| `UPLOADTHING_SECRET` / `UPLOADTHING_APP_ID` | For uploads        | Artwork image uploads                                                                  |
+| `NEXT_PUBLIC_POSTHOG_KEY`                   | No                 | Analytics                                                                              |
+| `SKIP_ENV_VALIDATION`                       | No                 | Skip env validation (CI, lint)                                                         |
+| `TEST_POSTGRES_URL`                         | No                 | Integration tests: reuse a disposable `_test` database instead of starting a container |
+| `TEST_PG_IMAGE`                             | No                 | Integration tests: container image (default `postgres:17-alpine`)                      |
 
 ## Testing
 
 ```bash
-pnpm test              # everything: unit + integration
-pnpm test:unit         # no database or Docker required
-pnpm test:integration  # real PostgreSQL (see below)
+pnpm test                 # everything: unit + integration
+pnpm test:unit            # no database or Docker required
+pnpm test:integration     # real PostgreSQL (see below)
 ```
 
-- `tests/routes/`, `tests/schemas/`, `tests/lib/` — route-handler and
-  validation tests. The data-access layer is mocked on purpose; they cover
-  HTTP status codes, request validation and response shapes only.
-- `tests/integration/` — real data-access coverage against PostgreSQL. The
-  suite starts an ephemeral `postgres:17-alpine` container (Docker required),
-  applies `tests/integration/schema.sql`, seeds rows through the app's real
-  query functions in `src/server/queries(*)`, and asserts against what is
-  actually stored. Only the connection factory (`~/server/db`) is
-  substituted with a TCP client (`tests/integration/db-client.ts`), because
-  the app's pooled Neon driver cannot speak to plain PostgreSQL; every query
-  function and all SQL run unmocked.
-- To reuse a disposable database instead of starting a container:
-  `TEST_POSTGRES_URL="postgresql://.../avecusho_test" pnpm test:integration`
-  (tables are truncated between tests — never point it at a real database).
+- `tests/routes/`, `tests/schemas/`, `tests/lib/` — route-handler and validation tests. The data-access layer is mocked on purpose; they cover HTTP status codes, request validation, and response shapes only.
+- `tests/integration/` — data-access coverage against real PostgreSQL. The suite starts an ephemeral container (Docker required), applies the committed `drizzle/` migrations — the exact schema production uses — seeds rows through the real query functions in `src/server/queries`, and asserts against what is stored. Only the connection factory (`~/server/db`) is substituted with a TCP client (`tests/integration/db-client.ts`), because the app's pooled Neon driver cannot speak to plain PostgreSQL; every query and all SQL run unmocked.
 
-## Project Structure
+## API overview
+
+All request/response bodies are JSON.
+
+| Method | Endpoint                 | Purpose                                           |
+| ------ | ------------------------ | ------------------------------------------------- |
+| GET    | `/api/items/allitems`    | List all items (empty store returns `[]`)         |
+| POST   | `/api/items/oneitem`     | Single item by `itemId`                           |
+| POST   | `/api/item`              | Stripe product lookup/creation for an item        |
+| POST   | `/api/item/bought`       | Mark an item purchased by a user                  |
+| POST   | `/api/bought-items`      | Items purchased by a user                         |
+| POST   | `/api/cart/add`          | Add an item to the user's cart                    |
+| POST   | `/api/cart/items`        | Items in the user's cart                          |
+| POST   | `/api/cart/item`         | Look up a single cart entry                       |
+| DELETE | `/api/cart/delete`       | Remove an item from the cart                      |
+| POST   | `/api/checkout_sessions` | Create a Stripe Checkout Session                  |
+| POST   | `/api/upload`            | Create a new artwork listing (validated with Zod) |
+| POST   | `/api/user/find`         | User profile with details                         |
+| POST   | `/api/user/edit`         | Create or update profile details                  |
+| GET    | `/api/admin`             | Role check (200 for admins, 403 otherwise)        |
+
+## Project structure
 
 ```
 src/
 ├── actions/         # Server actions
-├── app/            # App router pages
-├── components/     # React components
-├── lib/           # Utility functions
-├── server/        # Server-side code
-│   ├── db/       # Database configuration
-│   └── queries/  # Database queries
-├── styles/        # Global styles
-└── types/         # TypeScript types
+├── app/             # App Router pages and API routes
+├── components/      # React components (UI, auth, nav, store)
+├── lib/             # Auth helpers, tokens, type definitions
+├── schemas/         # Zod validation schemas
+├── server/
+│   ├── db/          # Database client and Drizzle schema
+│   └── queries/     # Data-access layer
+├── middleware.ts    # Auth middleware (route gating)
+├── providers/       # Client-side providers
+└── utils/           # Shared utilities
+tests/
+├── routes/          # Route-handler tests (mocked data access)
+├── schemas/         # Schema validation tests
+├── lib/             # Utility tests
+└── integration/     # Integration tests (real PostgreSQL)
+drizzle/             # Committed database migrations
+scripts/            # One-off maintenance scripts
 ```
 
-## Contributing
+## Scripts
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+| Command                                        | Purpose                                     |
+| ---------------------------------------------- | ------------------------------------------- |
+| `pnpm dev`                                     | Start the development server                |
+| `pnpm build` / `pnpm start`                    | Production build / serve it                 |
+| `pnpm lint`                                    | Lint (needs env or `SKIP_ENV_VALIDATION=1`) |
+| `pnpm test` / `test:unit` / `test:integration` | Test suites                                 |
+| `pnpm db:generate`                             | Generate a migration from schema changes    |
+| `pnpm db:migrate`                              | Apply migrations to `POSTGRES_URL`          |
+| `pnpm db:push`                                 | Push the schema directly (development)      |
+| `pnpm db:studio`                               | Open Drizzle Studio                         |
 
-## License
+## Issues
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Shadcn UI](https://ui.shadcn.com/)
-- [Stripe](https://stripe.com/)
-- [UploadThing](https://uploadthing.com/)
-- [PostHog](https://posthog.com/)
+Bug reports and feature requests: https://github.com/ByalykT01/avecusho/issues
