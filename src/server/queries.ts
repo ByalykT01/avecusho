@@ -146,7 +146,14 @@ export async function addItemToCart(itemId: number, userId: string) {
   return { message: "Item added to cart successfully!", cartId, itemId };
 }
 
-export async function updateItemOnPurchase(itemId: number, userId: string) {
+export type UpdateItemOnPurchaseResult =
+  | { success: true; data: (typeof items.$inferSelect)[] }
+  | { success: false; error: "NOT_FOUND" };
+
+export async function updateItemOnPurchase(
+  itemId: number,
+  userId: string,
+): Promise<UpdateItemOnPurchaseResult> {
   const existingItem = await db
     .select()
     .from(items)
@@ -154,10 +161,7 @@ export async function updateItemOnPurchase(itemId: number, userId: string) {
     .limit(1);
 
   if (!existingItem.length) {
-    return {
-      success: false,
-      error: "Item not found",
-    };
+    return { success: false, error: "NOT_FOUND" };
   }
 
   const updatedItem = await db
@@ -166,7 +170,7 @@ export async function updateItemOnPurchase(itemId: number, userId: string) {
     .where(eq(items.id, itemId))
     .returning();
 
-  return updatedItem;
+  return { success: true, data: updatedItem };
 }
 
 export async function getUserByEmail(email: string) {

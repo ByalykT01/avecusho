@@ -30,7 +30,10 @@ describe("updateItemOnPurchase", () => {
 
     const updated = await updateItemOnPurchase(itemId, userId);
 
-    expect(updated).toEqual([expect.objectContaining({ id: itemId, userId })]);
+    expect(updated).toEqual({
+      success: true,
+      data: [expect.objectContaining({ id: itemId, userId })],
+    });
   });
 
   it("returns { success: false } when the item does not exist", async () => {
@@ -38,7 +41,7 @@ describe("updateItemOnPurchase", () => {
 
     await expect(updateItemOnPurchase(999_999, userId)).resolves.toEqual({
       success: false,
-      error: "Item not found",
+      error: "NOT_FOUND",
     });
   });
 });
