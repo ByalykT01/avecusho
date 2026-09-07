@@ -100,7 +100,7 @@ importers:
         version: 2.1.1
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@neondatabase/serverless@0.9.4)(@types/pg@8.11.6)(@types/react@18.3.4)(@vercel/postgres@0.9.0)(pg@8.12.0)(postgres@https://codeload.github.com/porsager/postgres/tar.gz/4baef5e4c6fbf6e655da033bfde2a7193623329a)(react@18.3.1)
+        version: 0.33.0(@neondatabase/serverless@0.9.4)(@types/pg@8.23.1)(@types/react@18.3.4)(@vercel/postgres@0.9.0)(pg@8.12.0)(postgres@https://codeload.github.com/porsager/postgres/tar.gz/4baef5e4c6fbf6e655da033bfde2a7193623329a)(react@18.3.1)
       dropdown-menu:
         specifier: ^0.1.1
         version: 0.1.1
@@ -204,6 +204,9 @@ importers:
       '@types/node':
         specifier: ^20.14.10
         version: 20.16.1
+      '@types/pg':
+        specifier: ^8.23.1
+        version: 8.23.1
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.4
@@ -1801,6 +1804,9 @@ packages:
 
   '@types/pg@8.11.6':
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
+
+  '@types/pg@8.23.1':
+    resolution: {integrity: sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A==}
 
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
@@ -7515,6 +7521,12 @@ snapshots:
       pg-protocol: 1.6.1
       pg-types: 4.0.2
 
+  '@types/pg@8.23.1':
+    dependencies:
+      '@types/node': 20.16.1
+      pg-protocol: 1.6.1
+      pg-types: 2.2.0
+
   '@types/prop-types@15.7.12': {}
 
   '@types/react-dom@18.3.0':
@@ -8619,10 +8631,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@neondatabase/serverless@0.9.4)(@types/pg@8.11.6)(@types/react@18.3.4)(@vercel/postgres@0.9.0)(pg@8.12.0)(postgres@https://codeload.github.com/porsager/postgres/tar.gz/4baef5e4c6fbf6e655da033bfde2a7193623329a)(react@18.3.1):
+  drizzle-orm@0.33.0(@neondatabase/serverless@0.9.4)(@types/pg@8.23.1)(@types/react@18.3.4)(@vercel/postgres@0.9.0)(pg@8.12.0)(postgres@https://codeload.github.com/porsager/postgres/tar.gz/4baef5e4c6fbf6e655da033bfde2a7193623329a)(react@18.3.1):
     optionalDependencies:
       '@neondatabase/serverless': 0.9.4
-      '@types/pg': 8.11.6
+      '@types/pg': 8.23.1
       '@types/react': 18.3.4
       '@vercel/postgres': 0.9.0
       pg: 8.12.0

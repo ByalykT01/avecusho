@@ -7,6 +7,8 @@
 
 # testing
 /coverage
+# Published by tests/integration/global-setup.ts (ephemeral PG connection URL).
+tests/integration/.pg-url
 
 # database
 /prisma/db.sqlite
