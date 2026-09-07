@@ -3,16 +3,9 @@ import { getItems } from "~/server/queries";
 
 export async function GET() {
   try {
+    // An empty store is a successful query yielding an empty set, not a
+    // missing resource: always respond 200 with the (possibly empty) list.
     const items = await getItems();
-
-    // findMany always resolves to an array, so an empty store must be
-    // checked explicitly — a bare falsy check here would be unreachable.
-    if (!items || items.length === 0) {
-      return NextResponse.json(
-        { message: "Item not found in db" },
-        { status: 404 },
-      );
-    }
 
     return NextResponse.json(items, { status: 200 });
   } catch (e) {

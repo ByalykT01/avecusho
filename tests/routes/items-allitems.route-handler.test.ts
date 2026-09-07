@@ -35,16 +35,15 @@ describe("route-handler: GET /api/items/allitems", () => {
     await expect(res.json()).resolves.toEqual(fakeItems);
   });
 
-  it("returns 404 when the query resolves to an empty list", async () => {
-    // The real query (drizzle findMany) always resolves to an array, so the
-    // route treats an empty array as the not-found condition.
+  it("returns 200 with an empty array when the store is empty", async () => {
+    // An empty store is a successful query yielding an empty set, not a
+    // missing resource.
     getItemsMock.mockResolvedValueOnce([]);
 
     const res = await GET();
 
-    expect(res.status).toBe(404);
-    const body = (await res.json()) as { message: string };
-    expect(body.message).toMatch(/not found/i);
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toEqual([]);
   });
 
   it("returns 500 when the query throws an Error", async () => {

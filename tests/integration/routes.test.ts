@@ -46,10 +46,11 @@ describe("GET /api/items/allitems (real database)", () => {
     expect(body.map((item) => item.name)).toContain("Vase");
   });
 
-  it("returns 404 when the store is empty", async () => {
+  it("returns 200 with an empty array when the store is empty", async () => {
     const res = await allItemsGET();
 
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toEqual([]);
   });
 });
 
