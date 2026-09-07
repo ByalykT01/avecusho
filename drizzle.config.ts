@@ -8,5 +8,4 @@ export default {
   dbCredentials: {
     url: env.POSTGRES_URL,
   },
-  tablesFilter: ["aurora_*"],
 } satisfies Config;
