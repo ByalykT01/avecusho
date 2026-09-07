@@ -5,7 +5,9 @@ export async function GET() {
   try {
     const items = await getItems();
 
-    if (!items) {
+    // findMany always resolves to an array, so an empty store must be
+    // checked explicitly — a bare falsy check here would be unreachable.
+    if (!items || items.length === 0) {
       return NextResponse.json(
         { message: "Item not found in db" },
         { status: 404 },

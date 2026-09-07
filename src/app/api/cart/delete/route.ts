@@ -20,6 +20,9 @@ export async function DELETE(req: Request) {
     const result = await deleteItemFromCart(itemId, userId);
     return NextResponse.json(result, { status: 200 });
   } catch (e) {
-    return NextResponse.json({ error: e }, { status: 500 });
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
