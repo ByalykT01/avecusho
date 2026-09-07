@@ -100,6 +100,34 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000)
 
+> Note: the app's database client (`src/server/db`, via `@vercel/postgres`)
+> speaks the Neon wire protocol and only accepts Vercel Postgres pooled URLs
+> (or `localhost`). A plain local PostgreSQL container is not sufficient for
+> `next dev` — use a Vercel/Neon-backed `POSTGRES_URL`.
+
+## Testing
+
+```bash
+pnpm test              # everything: unit + integration
+pnpm test:unit         # no database or Docker required
+pnpm test:integration  # real PostgreSQL (see below)
+```
+
+- `tests/routes/`, `tests/schemas/`, `tests/lib/` — route-handler and
+  validation tests. The data-access layer is mocked on purpose; they cover
+  HTTP status codes, request validation and response shapes only.
+- `tests/integration/` — real data-access coverage against PostgreSQL. The
+  suite starts an ephemeral `postgres:17-alpine` container (Docker required),
+  applies `tests/integration/schema.sql`, seeds rows through the app's real
+  query functions in `src/server/queries(*)`, and asserts against what is
+  actually stored. Only the connection factory (`~/server/db`) is
+  substituted with a TCP client (`tests/integration/db-client.ts`), because
+  the app's pooled Neon driver cannot speak to plain PostgreSQL; every query
+  function and all SQL run unmocked.
+- To reuse a disposable database instead of starting a container:
+  `TEST_POSTGRES_URL="postgresql://.../avecusho_test" pnpm test:integration`
+  (tables are truncated between tests — never point it at a real database).
+
 ## Project Structure
 
 ```
