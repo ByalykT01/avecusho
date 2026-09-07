@@ -14,17 +14,15 @@ import {
   pgEnum,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccount } from "next-auth/adapters";
-import { env } from "~/env";
+
+// NOTE: this module must stay side-effect free (pure table definitions).
+// The single shared database client lives in ~/server/db. Importing this
+// module must never open a connection or require POSTGRES_URL so that unit
+// tests and tooling can import table definitions without a live database.
 
 export const pgTable = pgTableCreator((name) => `aurora_${name}`);
 export const pgTableNoPrefix = pgTableCreator((name) => `${name}`);
-
-const connectionString = env.POSTGRES_URL;
-const pool = postgres(connectionString, { max: 1 });
-export const db = drizzle(pool);
 
 export const userRoleEnum = pgEnum("user_role", ["ADMIN", "USER"]);
 
