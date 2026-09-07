@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+// Route-handler tests for GET /api/items/allitems.
+// The data-access layer (`~/server/queries`) is mocked here on purpose: these
+// tests cover HTTP status codes and response shapes only. Real PostgreSQL
+// data-access coverage lives in tests/integration/.
+
 const getItemsMock = vi.fn();
 vi.mock("~/server/queries", () => ({
   getItems: (...args: unknown[]) => getItemsMock(...args),
@@ -7,7 +12,7 @@ vi.mock("~/server/queries", () => ({
 
 const { GET } = await import("~/app/api/items/allitems/route");
 
-describe("GET /api/items/allitems", () => {
+describe("route-handler: GET /api/items/allitems", () => {
   beforeEach(() => {
     getItemsMock.mockReset();
   });
@@ -30,10 +35,10 @@ describe("GET /api/items/allitems", () => {
     await expect(res.json()).resolves.toEqual(fakeItems);
   });
 
-  it("returns 404 when there are no items in the database", async () => {
-    // The route treats a falsy value (undefined / null) from the query as a
-    // missing-items condition.
-    getItemsMock.mockResolvedValueOnce(undefined);
+  it("returns 404 when the query resolves to an empty list", async () => {
+    // The real query (drizzle findMany) always resolves to an array, so the
+    // route treats an empty array as the not-found condition.
+    getItemsMock.mockResolvedValueOnce([]);
 
     const res = await GET();
 
