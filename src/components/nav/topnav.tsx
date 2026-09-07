@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState, memo } from "react";
 import { CiMenuBurger, CiCircleRemove, CiShoppingCart } from "react-icons/ci";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import MobileMenu from "./mobile-menu";
 import NavLinks from "./nav-links";
 import Logo from "./icon";
@@ -129,48 +128,6 @@ const TopNav: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const showHeader = useScrollDirection(isDesktop);
-  const router = useRouter();
-
-  // Secret gesture states
-  const [tapCount, setTapCount] = useState(0);
-  const [lastTapTime, setLastTapTime] = useState(0);
-  const [rotationAngle, setRotationAngle] = useState(0);
-  const [isRotating, setIsRotating] = useState(false);
-
-  const handleLogoInteraction = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    const currentTime = Date.now();
-    
-    if (currentTime - lastTapTime > 2000) {
-      setTapCount(1);
-    } else {
-      setTapCount(prev => prev + 1);
-    }
-    
-    setLastTapTime(currentTime);
-
-    if (tapCount === 2) {
-      setIsRotating(true);
-      setRotationAngle(0);
-      
-      window.addEventListener('deviceorientation', handleOrientation);
-      
-      setTimeout(() => {
-        setIsRotating(false);
-        setTapCount(0);
-        window.removeEventListener('deviceorientation', handleOrientation);
-      }, 5000);
-    }
-  }, [tapCount, lastTapTime]);
-
-  const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
-    if (event.gamma && Math.abs(event.gamma) > 60) {
-      router.push('/special');
-      setIsRotating(false);
-      setTapCount(0);
-      window.removeEventListener('deviceorientation', handleOrientation);
-    }
-  }, [router]);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
@@ -183,12 +140,7 @@ const TopNav: React.FC = () => {
       } z-50 shadow-md`}
       role="navigation"
     >
-      <div 
-        onClick={handleLogoInteraction}
-        className={`cursor-pointer transition-all duration-300 ${isRotating ? 'animate-spin' : ''}`}
-      >
-        <Logo />
-      </div>
+      <Logo />
       <NavLinks />
       <MobileMenuToggle isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

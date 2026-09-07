@@ -4,46 +4,18 @@ import { useEffect, useState } from "react";
 
 export default function MainPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const [showRiddle, setShowRiddle] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 100);
-    const riddleTimer = setTimeout(() => {
-      setShowRiddle(true);
-    }, 2000);
     return () => {
       clearTimeout(timer);
-      clearTimeout(riddleTimer);
     };
   }, []);
 
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-8">
-      {showRiddle && (
-        <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-500 ease-in-out">
-          <div className="animate-scale-up mx-4 max-w-md transform rounded-lg bg-white p-6 shadow-xl transition-transform duration-500 ease-in-out">
-            <h3 className="mb-4 text-xl font-semibold text-gray-800">
-              Secret Challenge
-            </h3>
-            <p className="mb-4 text-gray-600">
-              On this website, a secret stirs, cloaked in shadows unseen. The
-              crimson sigil turns, its silent dance a beckoning curse. Follow,
-              if thou art bold, and let thy phone mirror its unholy rite. Those
-              who unravel this enigma shall unearth a treasure most coveted,
-              entombed amidst relics long forsaken. Step forth, bearer of
-              resolve... shouldst thou dare.
-            </p>
-            <button
-              onClick={() => setShowRiddle(false)}
-              className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700"
-            >
-              Accept the Challenge
-            </button>
-          </div>
-        </div>
-      )}
       <h1
         className={`relative mb-10 text-center text-4xl font-bold text-gray-800 transition-opacity duration-500 ease-in-out ${
           isVisible ? "opacity-100" : "opacity-0"
