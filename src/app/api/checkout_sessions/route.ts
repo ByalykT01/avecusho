@@ -2,7 +2,13 @@ import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { updateItemOnPurchase } from "~/server/queries";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const getStripe = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
+  }
+  return new Stripe(secretKey);
+};
 
 interface RequestBody {
   default_price: string;
@@ -21,6 +27,7 @@ export async function POST(req: NextRequest) {
   const returnUrl = `${origin}${baseReturnPath}/return?session_id={CHECKOUT_SESSION_ID}`;
   
   try {
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
       line_items: [
@@ -48,6 +55,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Session ID is required" }, { status: 400 });
   }
   try {
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     return NextResponse.json({
       status: session.status,
