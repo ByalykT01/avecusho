@@ -1,31 +1,44 @@
 // Global setup for the integration test project.
 //
-// Starts an ephemeral PostgreSQL container (postgres:17-alpine) on a
-// dynamically mapped host port, waits until it accepts connections, creates
-// the tables from ./schema.sql, and publishes the connection URL to
-// ./​.pg-url so worker processes can pick it up in ./setup-env.ts.
+// Starts an ephemeral PostgreSQL container on a dynamically mapped host
+// port, waits until it accepts connections, applies the committed drizzle
+// migrations (drizzle/), and publishes the connection URL to workers via
+// provide() (see ./setup-env.ts) plus the ./.pg-url fallback file.
 //
-// If TEST_POSTGRES_URL is set, no container is started and the schema is
-// applied to that database instead. Point it at a DISPOSABLE database: the
-// suite truncates tables between tests.
+// If TEST_POSTGRES_URL is set, no container is started and the migrations
+// are applied to that database instead. It must be a DISPOSABLE database
+// whose name ends with _test: the suite truncates tables between tests and
+// setup refuses anything else.
 //
 // Vitest calls the default export before the workers start and calls the
 // returned function as teardown afterwards.
 
 import { execFile } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { readFile, unlink, writeFile } from "node:fs/promises";
+import { unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { Pool } from "pg";
+
+// Minimal structural type for the global-setup context (vitest does not
+// export a public type for it). `provide` publishes values that workers
+// read back via `inject` (see ./setup-env.ts).
+interface SetupContext {
+  provide: (key: "avecushoPgUrl", value: string) => void;
+}
 
 const execFileAsync = promisify(execFile);
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const pgUrlFile = path.join(here, ".pg-url");
 
-const IMAGE = "postgres:17-alpine";
+// Override to match production's exact PostgreSQL version
+// (e.g. TEST_PG_IMAGE=postgres:15-alpine).
+const IMAGE = process.env.TEST_PG_IMAGE?.trim() || "postgres:17-alpine";
 const READY_TIMEOUT_MS = 90_000;
 
 async function docker(...args: string[]): Promise<string> {
@@ -60,30 +73,23 @@ async function waitForReady(url: string): Promise<void> {
 }
 
 async function applySchema(url: string): Promise<void> {
-  // onnotice swallows the "relation already exists, skipping" notices so
-  // reusing a database via TEST_POSTGRES_URL stays quiet.
-  const sql = postgres(url, { max: 1, onnotice: () => undefined });
+  // Apply the committed drizzle migrations — the exact schema
+  // representation production uses. Already-applied migrations are skipped,
+  // so reusing a database via TEST_POSTGRES_URL is idempotent and quiet.
+  const pool = new Pool({ connectionString: url });
   try {
-    // CREATE TYPE has no IF NOT EXISTS variant, so create the enum only when
-    // it is missing (matters when reusing a database via TEST_POSTGRES_URL).
-    const existing = await sql`SELECT 1 FROM pg_type WHERE typname = 'user_role'`;
-    if (existing.length === 0) {
-      await sql.unsafe(`CREATE TYPE user_role AS ENUM ('ADMIN', 'USER')`);
-    }
-    const schema = await readFile(path.join(here, "schema.sql"), "utf8");
-    const statements = schema
-      .split(/;\s*\n/)
-      .map((statement) => statement.trim().replace(/;$/, ""))
-      .filter(Boolean);
-    for (const statement of statements) {
-      await sql.unsafe(statement);
-    }
+    const db = drizzle(pool);
+    await migrate(db, {
+      migrationsFolder: path.join(here, "..", "..", "drizzle"),
+    });
   } finally {
-    await sql.end();
+    await pool.end();
   }
 }
 
-export default async function setup(): Promise<() => Promise<void>> {
+export default async function setup({
+  provide,
+}: SetupContext): Promise<() => Promise<void>> {
   const externalUrl = process.env.TEST_POSTGRES_URL?.trim();
   let containerName: string | null = null;
   let url: string;
@@ -127,8 +133,20 @@ export default async function setup(): Promise<() => Promise<void>> {
     );
   }
 
+  // Safety guard: the suite truncates tables, so refuse anything that is
+  // not obviously a disposable test database.
+  const dbName = new URL(url).pathname.replace(/^\//, "").split("/")[0];
+  if (!dbName?.endsWith("_test")) {
+    throw new Error(
+      `Refusing to run integration tests against database "${dbName ?? url}": ` +
+        "use the ephemeral container (default) or point TEST_POSTGRES_URL " +
+        "at a disposable database whose name ends with _test.",
+    );
+  }
+
   await waitForReady(url);
   await applySchema(url);
+  provide("avecushoPgUrl", url);
   await writeFile(pgUrlFile, url, "utf8");
 
   return async () => {
