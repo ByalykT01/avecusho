@@ -2,7 +2,13 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getOneItem } from "~/server/queries";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function getStripe() {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
+  }
+  return new Stripe(secretKey);
+}
 
 interface RequestBody {
   itemId: number;
@@ -20,6 +26,7 @@ export async function POST(req: NextRequest) {
         { status: 404 }, 
       );
     }
+    const stripe = getStripe();
     const products = await stripe.products.list();
     const existingProduct = products.data.find(
       (product) => product.name === foundItem.name,
